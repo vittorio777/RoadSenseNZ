@@ -1,4 +1,4 @@
-import type {ScenarioMeta, ScenarioQuestion, ScenarioAnimation, Scenario} from "../../contracts/scenario";
+import type {ScenarioMeta, ScenarioQuestion, ScenarioAnimation, Scenario} from "../../../contracts/scenario";
 
 const mockScenarioMeta: ScenarioMeta = {
     scenarioId: "scenario-001",

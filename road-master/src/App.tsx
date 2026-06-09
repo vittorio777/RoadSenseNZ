@@ -1,11 +1,11 @@
 import './App.css'
-import ScenarioPlayer from './components/ScenarioPlayer';
+import PracticePage from './components/PracticePage';
 
 function App() {
   return (
     <div className="App">
       <h1>Road Master</h1>
-      <ScenarioPlayer />
+      <PracticePage />
     </div>
   )
 }

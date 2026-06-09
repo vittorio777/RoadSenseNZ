@@ -1,28 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import ScenarioCanvas from './ScenarioCanvas';
-import type {StageScenario} from '../contracts/scenario';
-import {mockScenario} from '../content/scenario/mockScenario';
+import type {StageScenario, Scenario} from '../contracts/scenario';
 
-const ScenarioPlayer = () => {
-  const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
-  let stageScenario: StageScenario;
-  
-  if (selectedOptionId === null) {
-    // 还未选择，展示 intro 动画
-    stageScenario = {
+const ScenarioPlayer = ({mockScenario, handleClickOption, userSelectedOption}: {mockScenario: Scenario, handleClickOption: (optionIndex: number) => void; userSelectedOption:(number | null)}) => {
+  const [replayKey, setReplayKey] = useState(0); // 用于重置动画
+  const [stageScenario, setStageScenario] = useState<StageScenario>({
       tracks: mockScenario.animations.script.introTracks,
       duration: mockScenario.animations.script.introDuration,
       width: mockScenario.animations.width,
       height: mockScenario.animations.height,
-    }
-  } else {
-    // 已选择，展示对应选项动画
-    stageScenario = {
-      tracks: mockScenario.animations.script.optionTracks[selectedOptionId].tracks,
+    })
+
+  function handleOptionSelect(optionId: string) {
+    const optionIndex = optionId.charCodeAt(0) - 'A'.charCodeAt(0);
+    const newStageScenario = {
+      tracks: mockScenario.animations.script.optionTracks[optionIndex].tracks,
       duration: mockScenario.animations.script.optionDuration,
       width: mockScenario.animations.width,
       height: mockScenario.animations.height,
     };
+
+    setStageScenario(newStageScenario);
+    setReplayKey(prev => prev + 1); // 通过改变 key 来重置动画
+    handleClickOption(optionIndex);
   }
 
 
@@ -30,22 +30,26 @@ const ScenarioPlayer = () => {
     <div>
       <h2>{mockScenario.questions.prompt}</h2>
 
+      {/* 画布 */}
       <div>
-        <ScenarioCanvas scenario={stageScenario} />
+        <ScenarioCanvas key={replayKey} scenario={stageScenario} />
       </div>
 
+      {/* 回答选项 */}
       <div>
         <ul>
           {mockScenario.questions.options.map(option => (
-            <li key={option.id} onClick={() => setSelectedOptionId(option.id.charCodeAt(0) - 'A'.charCodeAt(0))}>
+            <li key={option.id} onClick={() => handleOptionSelect(option.id)} 
+            style={{cursor: 'pointer', color: userSelectedOption === (option.id.charCodeAt(0) - 'A'.charCodeAt(0)) ? (option.isCorrect ? 'lightgreen' : 'red') : 'lightgray'}}>
               {option.id}. {option.text}
             </li>
           ))}
         </ul>
       </div>
 
+      {/* 问题解析 */}
       <div>
-        {selectedOptionId !== null && (
+        {userSelectedOption !== null && (
           <div>
             <h3>Explanation:</h3>
             <p>{mockScenario.questions.explanation}</p>
