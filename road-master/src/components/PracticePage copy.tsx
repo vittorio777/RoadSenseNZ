@@ -1,44 +1,36 @@
 import {useState} from 'react'
 import ScenarioPlayer from './ScenarioPlayer';
-import SidebarNav from './SidebarNav'
-import type { Stage, StageGroup } from "../contracts/scenario";
-import type {Scenario} from '../contracts/scenario';
-import {allMockScenario, ScenarioIdArray} from '../content/scenario/index';
-// 编个分章节的数据，然后用group和stage来确定sum，然后接上之前的工作
-
+import SidebarNav from './PracticeSidebar'
+import type { Stage, StageGroup, Location} from "../contracts/scenario";
+import {allMockScenario} from '../content/scenario/index';
 
 const PracticePage = () => {
-    console.log("allMockScenario", allMockScenario);
-//   const [currentStage, setCurrentStage] = useState<Stage | null>(null);
-//   const [currentStageGroup, setCurrentStageGroup] = useState<StageGroup | null>(null);
-  const [selectedStageMockScenario, setSelectedStageMockScenario] = useState<Scenario[]>([]);
-  const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
-  const [userSelectedOptions, setUserSelectedOptions] = useState<(number | null)[]>(Array(selectedStageMockScenario.length).fill(null));
+  const [currentLocation, setCurrentLocation] = useState<Location>({stageGroup: null, stage: null, scenarioIndex: 0});
+  const [progressByScenarioId, setProgressByScenarioId] = useState<Record<string, number>>({})
 
+  // 当前章节中的全部scenario
+  const currentMockScenarios = currentLocation.stageGroup && currentLocation.stage ? allMockScenario.filter((item) => (
+    item.meta.stageGroup === currentLocation.stageGroup && item.meta.stage === currentLocation.stage)): [];
+
+  // 当前展示的题的scenario
+  const currentMockScenario = currentMockScenarios[currentLocation.scenarioIndex]
+  
+  // 右侧小方格切换问题
   function handleScenarioChange(index: number) {
-    // 右侧小方格切换问题
-    setCurrentScenarioIndex(index);
+    setCurrentLocation((prev) => ({...prev, scenarioIndex: index}));
   }
 
-  function handleUserSelectedOptions(optionIndex: number) {
-    // 处理选项选择逻辑，例如记录用户选择、显示解释等
-    setUserSelectedOptions(prev => {
-        const newSelectedOptions = [...prev];
-        newSelectedOptions[currentScenarioIndex] = optionIndex;
-        return newSelectedOptions;
-    });
+  // 处理选项选择逻辑，例如记录用户选择、显示解释等
+  function handleUserSelections(optionIndex: number) {
+    const scenarioId = currentMockScenario.meta.scenarioId;
+    setProgressByScenarioId((prev) => ({...prev, [scenarioId]: optionIndex}))
   }
 
+  // 左侧章节切换
   function handleStageClick(stageGroup: StageGroup, stage: Stage) {
-    // 左侧章节切换
-    // setCurrentStageGroup(stageGroup);
-    // setCurrentStage(stage);
-    const newSelectedStageMockScenario = allMockScenario.filter((item) => {
-        if (item.meta.stageGroup === stageGroup && item.meta.stage === stage) return true;
-        return false;
-    })
-    setSelectedStageMockScenario(newSelectedStageMockScenario);
+    setCurrentLocation({stageGroup, stage, scenarioIndex: 0});
   }
+
 
   return (
     <div>
@@ -48,23 +40,38 @@ const PracticePage = () => {
       
       {/* 切换题目按钮 */}
       <div>
-        {selectedStageMockScenario.map((_, index) => {
-            return (<button key={index} 
-                onClick={() => handleScenarioChange(index)} 
-                style={{border: currentScenarioIndex === index ? '2px solid blue' : '2px solid lightgray',
-                    backgroundColor:  userSelectedOptions[index] !== null ? 
-                    (selectedStageMockScenario[index].questions.options[userSelectedOptions[index]].isCorrect ? 'lightgreen' : 'red') : 'lightgray'}}>{index + 1}
-                </button>)
+        {currentMockScenarios.map((scenario, index) => {
+            const scenarioId = scenario.meta.scenarioId;
+            const isCurrentScenario = currentLocation.scenarioIndex === index;
+            const selectedOptionIndex = progressByScenarioId[scenarioId];
+            const isAnswered = selectedOptionIndex !== undefined;
+            const isCorrect = isAnswered ? scenario.questions.options[selectedOptionIndex].isCorrect : false;
+            const border = isCurrentScenario ? '2px solid blue' : '2px solid lightgray';
+            const backgroundColor = isAnswered ? (isCorrect ? 'lightgreen' : 'red') : 'lightgray';
+
+            return (
+                <button 
+                    key={index} 
+                    onClick={() => handleScenarioChange(index)} 
+                    style={{border,backgroundColor}}
+                >
+                    {index + 1}
+                </button>
+            );
         })}
       </div>
       
       {/* 播放器 */}
-      {<ScenarioPlayer 
-        key={selectedStageMockScenario[currentScenarioIndex].meta.scenarioId} 
-        mockScenario={selectedStageMockScenario[currentScenarioIndex]} 
-        handleClickOption={handleUserSelectedOptions} 
-        userSelectedOption={userSelectedOptions[currentScenarioIndex]}
-      />}
+      {currentMockScenario && (
+        <ScenarioPlayer 
+            key={currentMockScenario.meta.scenarioId} 
+            mockScenario={currentMockScenario} 
+            handleUserSelections={handleUserSelections} 
+            userSelectedOption={
+                progressByScenarioId[currentMockScenario.meta.scenarioId]
+            }
+        />
+      )}
     </div>
   )
 }

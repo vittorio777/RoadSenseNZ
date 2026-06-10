@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import ScenarioPlayer from './ScenarioPlayer';
-import SidebarNav from './SidebarNav'
+import PracticeSidebar from './PracticeSidebar'
+import PracticeSidePanel from './PracticeSidePanel'
 import type { Stage, StageGroup, Location} from "../contracts/scenario";
 import {allMockScenario} from '../content/scenario/index';
 
@@ -36,10 +37,17 @@ const PracticePage = () => {
     <div>
       <h2>Practice Page</h2>
 
-      <SidebarNav onStageClick={handleStageClick}/>
+      <PracticeSidebar onStageClick={handleStageClick}/>
       
       {/* 切换题目按钮 */}
-      <div>
+      <PracticeSidePanel 
+        currentMockScenarios={currentMockScenarios} 
+        currentLocation={currentLocation} 
+        progressByScenarioId={progressByScenarioId} 
+        handleScenarioChange={handleScenarioChange}
+      />
+
+      {/* <div>
         {currentMockScenarios.map((scenario, index) => {
             const scenarioId = scenario.meta.scenarioId;
             const isCurrentScenario = currentLocation.scenarioIndex === index;
@@ -59,7 +67,7 @@ const PracticePage = () => {
                 </button>
             );
         })}
-      </div>
+      </div> */}
       
       {/* 播放器 */}
       {currentMockScenario && (

@@ -6,7 +6,8 @@ type SidebarNavProps = {
   onStageClick: (stageGroup: StageGroup, stage: Stage) => void;
 };
 
-const SidebarNav = ({onStageClick}: SidebarNavProps) => {
+
+const PracticeSidebar = ({onStageClick}: SidebarNavProps) => {
   const [expandedGroups, setExpandedGroups] = useState<StageGroup[]>([]);
 
   function handleGroupClick(group: StageGroup) {
@@ -39,4 +40,4 @@ const SidebarNav = ({onStageClick}: SidebarNavProps) => {
   )
 }
 
-export default SidebarNav
+export default PracticeSidebar
