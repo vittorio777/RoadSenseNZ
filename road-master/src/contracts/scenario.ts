@@ -139,3 +139,9 @@ export type InterScenario = {
     height: number;
     templateName: string;
 };
+
+export type Location = {
+    stageGroup: StageGroup | null;
+    stage: Stage | null;
+    scenarioIndex: number
+}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ScenarioCanvas from './ScenarioCanvas';
 import type {InterScenario, Scenario} from '../contracts/scenario';
 
-const ScenarioPlayer = ({mockScenario, handleClickOption, userSelectedOption}: {mockScenario: Scenario, handleClickOption: (optionIndex: number) => void; userSelectedOption:(number | null)}) => {
+const ScenarioPlayer = ({mockScenario, handleUserSelections, userSelectedOption}: {mockScenario: Scenario, handleUserSelections: (optionIndex: number) => void; userSelectedOption:(number | null)}) => {
   const [replayKey, setReplayKey] = useState(0); // 用于重置动画
   const [interScenario, setInterScenario] = useState<InterScenario>({
       tracks: mockScenario.animations.script.introTracks,
@@ -16,17 +16,10 @@ const ScenarioPlayer = ({mockScenario, handleClickOption, userSelectedOption}: {
     const optionIndex = optionId.charCodeAt(0) - 'A'.charCodeAt(0);
     const newInterScenario = {...interScenario}
     newInterScenario.tracks = mockScenario.animations.script.optionTracks[optionIndex].tracks
-    // {
-    //   tracks: mockScenario.animations.script.optionTracks[optionIndex].tracks,
-    //   duration: mockScenario.animations.script.optionDuration,
-    //   width: mockScenario.animations.width,
-    //   height: mockScenario.animations.height,
-    //   templateName: mockScenario.animations.template
-    // };
 
     setInterScenario(newInterScenario);
     setReplayKey(prev => prev + 1); // 通过改变 key 来重置动画
-    handleClickOption(optionIndex);
+    handleUserSelections(optionIndex);
   }
 
 

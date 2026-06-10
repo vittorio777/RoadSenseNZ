@@ -1,7 +1,7 @@
 import type {ScenarioMeta, ScenarioQuestion, ScenarioAnimation, Scenario} from "../../../../contracts/scenario";
 
 const mockScenarioMeta: ScenarioMeta = {
-    scenarioId: "scenario-001",
+    scenarioId: "int_t_0001",
     interactionType: "AUTOPLAY_PAUSE_REPLAY",
     stageGroup: "Intersections",
     stage: "t_intersection",

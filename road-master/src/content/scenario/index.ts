@@ -1,8 +1,10 @@
-// import {mockScenario as mockScenario} from './t_intersection/int_t_0001';
-// import {mockScenario as mockScenario2} from './t_intersection/int_t_0002';
-// import {mockScenario as mockScenario3} from './t_intersection/int_t_0003';
+import type {Scenario} from '../../contracts/scenario'
 
 
-// const sumMockScenario = [mockScenario, mockScenario2, mockScenario3];
 
-// export default sumMockScenario;
+
+const modules = import.meta.glob('./**/*.scenario.ts', {eager: true}) as Record<string, {mockScenario: Scenario}>;
+
+export const allMockScenario: Scenario[] = Object.values(modules).map((module) => module.mockScenario).filter(Boolean);
+
+// export const ScenarioIdArray: Record<string, number | null> = Object.fromEntries(allMockScenario.map((senario) => [senario.meta.scenarioId, null]))
