@@ -1,4 +1,4 @@
-import type {ScenarioMeta, ScenarioQuestion, ScenarioAnimation, Scenario} from "../../../contracts/scenario";
+import type {ScenarioMeta, ScenarioQuestion, ScenarioAnimation, Scenario} from "../../../../contracts/scenario";
 
 const mockScenarioMeta: ScenarioMeta = {
     scenarioId: "scenario-001",
@@ -22,7 +22,7 @@ const mockScenarioQuestion: ScenarioQuestion = {
 };
 
 const mockScenarioAnimation: ScenarioAnimation = {
-  template: "template_t_intersection",
+  template: "T_INTERSECTION_001",
   width: 800,
   height: 600,
   script: {

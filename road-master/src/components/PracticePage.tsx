@@ -1,9 +1,14 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import ScenarioPlayer from './ScenarioPlayer';
+import SidebarNav from './SidebarNav'
+import type { Stage, StageGroup } from "../contracts/scenario";
 import sumMockScenario from '../content/scenario/Intersections/sumMockScenario';
+// 编个分章节的数据，然后用group和stage来确定sum，然后接上之前的工作
 
 
 const PracticePage = () => {
+  const [currentStage, setCurrentStage] = useState<Stage | null>(null);
+  const [currentStageGroup, setCurrentStageGroup] = useState<StageGroup | null>(null);
   const [currentScenarioIndex, setCurrentScenarioIndex] = useState(0);
   const [userSelectedOptions, setUserSelectedOptions] = useState<(number | null)[]>(Array(sumMockScenario.length).fill(null));
 
@@ -20,9 +25,16 @@ const PracticePage = () => {
     });
   }
 
+  function handleStageClick(stageGroup: StageGroup, stage: Stage) {
+    setCurrentStageGroup(stageGroup);
+    setCurrentStage(stage);
+  }
+
   return (
     <div>
       <h2>Practice Page</h2>
+
+      <SidebarNav onStageClick={handleStageClick}/>
       
       {/* 切换题目按钮 */}
       <div>

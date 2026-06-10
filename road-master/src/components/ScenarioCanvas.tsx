@@ -1,15 +1,16 @@
-import React from 'react'
 import {useRef, useEffect} from 'react'
-import type {KeyframeValue, StageScenario} from '../contracts/scenario'
+import type {KeyframeValue, InterScenario} from '../contracts/scenario'
 import { getFrameStates } from '../engine/scriptPlayer';
+import {drawSceneTemplate} from '../engine/sceneDrawer'
+import {STAGE_TEMPLATES} from '../content/template/sceneTemplate'
 
 
 type Props = {
-    scenario: StageScenario;
+    scenario: InterScenario;
 }
 
 const ScenarioCanvas = ({ scenario }: Props) => {
-  const {tracks, duration, width, height} = scenario;
+  const {tracks, duration, width, height, templateName} = scenario;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const ScenarioCanvas = ({ scenario }: Props) => {
         const currentTime = Math.min(elapsed, duration);
         const frameStates = getFrameStates(currentTime, tracks);
 
-        drawScene(ctx, width, height);
+        drawScene(ctx, width, height, templateName);
         drawObjects(ctx, frameStates);
 
         if (elapsed < duration) {
@@ -53,21 +54,14 @@ const ScenarioCanvas = ({ scenario }: Props) => {
   )
 }
 
-function drawScene(ctx: CanvasRenderingContext2D, width: number, height: number, template?: string) {
-    ctx.clearRect(0, 0, width, height);
+function drawScene(ctx: CanvasRenderingContext2D, width: number, height: number, templateName: string) {
+    if (!(templateName in STAGE_TEMPLATES)) {
+        throw new Error(`unknown stage template:${templateName}`)
+    }
 
-    // background
-    ctx.fillStyle = "#f3f3f3";
-    ctx.fillRect(0, 0, width, height);
+    const template = STAGE_TEMPLATES[templateName as keyof typeof STAGE_TEMPLATES];
 
-    // simple T intersection
-    ctx.fillStyle = "#555";
-
-    // horizontal road
-    ctx.fillRect(0, 250, width, 100);
-
-    // vertical road from bottom to center
-    ctx.fillRect(400, 300, 100, height - 300);
+    drawSceneTemplate(ctx, template);
 }
 
 function drawObjects(ctx: CanvasRenderingContext2D, frameStates: Record<string, KeyframeValue>) {

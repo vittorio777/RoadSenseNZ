@@ -3,7 +3,7 @@ import type {
   ScenarioQuestion,
   ScenarioAnimation,
   Scenario,
-} from "../../../contracts/scenario";
+} from "../../../../contracts/scenario";
 
 const mockScenarioMeta: ScenarioMeta = {
   scenarioId: "scenario-003",
@@ -45,7 +45,7 @@ const mockScenarioQuestion: ScenarioQuestion = {
 };
 
 const mockScenarioAnimation: ScenarioAnimation = {
-  template: "template_motorway_merge",
+  template: "MOTORWAY_MERGE_001",
   width: 800,
   height: 600,
   script: {

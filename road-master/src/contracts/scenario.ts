@@ -7,32 +7,51 @@ export type Scenario = {
 // 元数据相关类型
 export type ScenarioMeta = {
     scenarioId: string;
-    interactionType: "AUTOPLAY_PAUSE_REPLAY" | "LOOP_WITH_CHOICES" | "LOOP_GATED_CHOICES" | "STATIC_ONLY";
-    stageGroup: "Intersections" | "UrbanRoad" | "CountryRoad" | "Motorway" | "Parking" | "Hazards" | "Emergency";
-    stage:   // Intersections
-            "cross_intersection" | "t_intersection" | "roundabout"
-
-            // UrbanRoad
-            | "urban_straight" | "urban_multi_lane" | "pedestrian_crossing_zone" | "school_zone"
-
-            // CountryRoad
-            | "country_straight" | "country_uncontrolled_intersection"
-
-            // Motorway
-            | "motorway_merge" | "motorway_exit" | "motorway_cruising"
-
-            // Parking
-            | "roadside_parking" | "carpark"
-
-            // Hazards
-            | "roadworks_zone" | "emergency_vehicle_encounter" | "school_bus_encounter"
-
-            // Emergency
-            | "breakdown" | "accident_scene" | "loss_of_control";  
+    interactionType: InteractionType;
+    stageGroup: StageGroup;
+    stage: Stage;  
     tags: Tag[];
     articles: ArticleId[];
     preview: string;
 };
+
+export type InteractionType = 
+  | "AUTOPLAY_PAUSE_REPLAY"
+  | "LOOP_WITH_CHOICES" 
+  | "LOOP_GATED_CHOICES" 
+  | "STATIC_ONLY";
+
+export type StageGroup =
+  | "Intersections"
+  | "UrbanRoad"
+  | "CountryRoad"
+  | "Motorway"
+  | "Parking"
+  | "Hazards"
+  | "Emergency";
+
+export type Stage =
+  | "cross_intersection"
+  | "t_intersection"
+  | "roundabout"
+  | "urban_straight"
+  | "urban_multi_lane"
+  | "pedestrian_crossing_zone"
+  | "school_zone"
+  | "country_straight"
+  | "country_uncontrolled_intersection"
+  | "motorway_merge"
+  | "motorway_exit"
+  | "motorway_cruising"
+  | "roadside_parking"
+  | "carpark"
+  | "roadworks_zone"
+  | "emergency_vehicle_encounter"
+  | "school_bus_encounter"
+  | "breakdown"
+  | "accident_scene"
+  | "loss_of_control";
+
 
 export type Tag =   // Priority
                     "give-way" | "stop-sign" | "traffic-light" | "pedestrian-priority"
@@ -113,9 +132,10 @@ export type KeyframeValue =
 
 
 // 用于传递动画参数的简化类型
-export type StageScenario = {
+export type InterScenario = {
     tracks: Track[];
     duration: number;
     width: number;
     height: number;
+    templateName: string;
 };
