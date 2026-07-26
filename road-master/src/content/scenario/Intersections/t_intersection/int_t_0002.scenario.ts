@@ -14,6 +14,13 @@ const mockScenarioMeta: ScenarioMeta = {
   articles: ["t_intersection_rules"],
   preview:
     "You are at an uncontrolled T intersection and want to turn left. A vehicle is approaching from the right.",
+  location: {
+    name: "Example T Intersection",
+    address: "Auckland, New Zealand",
+    lat: -36.8485,
+    lng: 174.7633,
+    source: "Scenario inspired by a real T intersection layout",
+  }
 };
 
 const mockScenarioQuestion: ScenarioQuestion = {

@@ -13,6 +13,7 @@ export type ScenarioMeta = {
     tags: Tag[];
     articles: ArticleId[];
     preview: string;
+    location: RealLocation;
 };
 
 export type InteractionType = 
@@ -80,6 +81,14 @@ export type Article = {
     summary: string;
     content: string;
     relatedScenariosIds: string[]; // Array of related scenario IDs
+};
+
+export type RealLocation = {
+  name: string;
+  address?: string;
+  lat: number;
+  lng: number;
+  source?: string;
 };
 
 // 问题相关类型

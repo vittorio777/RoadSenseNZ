@@ -14,6 +14,13 @@ const mockScenarioMeta: ScenarioMeta = {
   articles: ["article-pedestrian-priority", "article-cross-intersection"],
   preview:
     "You are approaching a cross intersection and intend to turn left. A pedestrian is crossing the road ahead.",
+  location: {
+    name: "Example Cross Intersection",
+    address: "Auckland, New Zealand",
+    lat: -38.8515,
+    lng: 175.6364,
+    source: "Scenario inspired by a real Cross intersection layout",
+  }
 };
 
 const mockScenarioQuestion: ScenarioQuestion = {

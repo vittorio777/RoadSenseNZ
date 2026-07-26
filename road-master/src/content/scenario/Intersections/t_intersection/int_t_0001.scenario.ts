@@ -7,7 +7,14 @@ const mockScenarioMeta: ScenarioMeta = {
     stage: "t_intersection",
     tags: ["give-way", "right-turn"],
     articles: ["article-001", "article-002"],
-    preview: "A car approaches a T-intersection with a give-way sign. The driver intends to make a right turn."
+    preview: "A car approaches a T-intersection with a give-way sign. The driver intends to make a right turn.",
+    location: {
+      name: "Example T Intersection",
+      address: "Auckland, New Zealand",
+      lat: -36.8485,
+      lng: 174.7633,
+      source: "Scenario inspired by a real T intersection layout",
+    }
 };
 
 const mockScenarioQuestion: ScenarioQuestion = {

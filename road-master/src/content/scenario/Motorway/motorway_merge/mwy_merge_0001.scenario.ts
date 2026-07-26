@@ -14,6 +14,13 @@ const mockScenarioMeta: ScenarioMeta = {
   articles: ["article-motorway-merge", "article-lane-discipline"],
   preview:
     "You are entering the motorway from an on-ramp. A vehicle is already travelling in the left lane.",
+  location: {
+    name: "Example Highway",
+    address: "Auckland, New Zealand",
+    lat: -33.8485,
+    lng: 173.7633,
+    source: "Scenario inspired by a real Motorway layout",
+  }
 };
 
 const mockScenarioQuestion: ScenarioQuestion = {

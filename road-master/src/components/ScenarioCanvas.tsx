@@ -49,9 +49,14 @@ const ScenarioCanvas = ({ scenario }: Props) => {
 
 
 
-  return (
-    <canvas ref={canvasRef} width={width} height={height} style={{ border: '1px solid #ccc' }} />
-  )
+    return (
+    <canvas
+        ref={canvasRef}
+        width={width}
+        height={height}
+        className="mx-auto h-auto max-h-[65vh] w-full object-contain"
+    />
+    );
 }
 
 function drawScene(ctx: CanvasRenderingContext2D, width: number, height: number, templateName: string) {

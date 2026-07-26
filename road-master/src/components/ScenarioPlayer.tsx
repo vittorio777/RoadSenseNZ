@@ -25,12 +25,12 @@ const ScenarioPlayer = ({mockScenario, handleUserSelections, userSelectedOption}
 
   return (
     <div>
-      <h2>{mockScenario.questions.prompt}</h2>
-
       {/* 画布 */}
       <div>
         <ScenarioCanvas key={replayKey} scenario={interScenario} />
       </div>
+
+      <h2>{mockScenario.questions.prompt}</h2>
 
       {/* 回答选项 */}
       <div>
@@ -46,7 +46,7 @@ const ScenarioPlayer = ({mockScenario, handleUserSelections, userSelectedOption}
 
       {/* 问题解析 */}
       <div>
-        {userSelectedOption !== null && (
+        {userSelectedOption != null && (
           <div>
             <h3>Explanation:</h3>
             <p>{mockScenario.questions.explanation}</p>
