@@ -85,7 +85,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
 
     introDuration: 1,
 
-    optionDuration: 2,
+    optionDuration: 2.4,
 
     optionTracks: [
       {
@@ -96,8 +96,20 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 400, y: 430 } },
-              { t: 1, value: { x: 300, y: 300 } },
-              { t: 2, value: { x: 260, y: 300 } },
+              { t: 0.45, value: { x: 378, y: 365 } },
+              { t: 0.95, value: { x: 318, y: 305 } },
+              { t: 1.2, value: { x: 300, y: 285 } },
+              { t: 2.4, value: { x: 306, y: 322 } },
+            ],
+          },
+          {
+            objectId: "car1",
+            property: "rotation",
+            keyframes: [
+              { t: 0, value: { deg: -90 } },
+              { t: 0.9, value: { deg: -150 } },
+              { t: 1.2, value: { deg: -175 } },
+              { t: 2.4, value: { deg: 118 } },
             ],
           },
           {
@@ -105,8 +117,8 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 360, y: 260 } },
-              { t: 1, value: { x: 300, y: 260 } },
-              { t: 2, value: { x: 300, y: 260 } },
+              { t: 1.2, value: { x: 306, y: 260 } },
+              { t: 2.4, value: { x: 306, y: 260 } },
             ],
           },
           {
@@ -114,7 +126,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 300, y: 300 } },
-              { t: 2, value: { x: 700, y: 300 } },
+              { t: 2.4, value: { x: 700, y: 300 } },
             ],
           },
         ],
@@ -128,7 +140,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             keyframes: [
               { t: 0, value: { x: 360, y: 260 } },
               { t: 1, value: { x: 520, y: 260 } },
-              { t: 2, value: { x: 620, y: 260 } },
+              { t: 2.4, value: { x: 660, y: 260 } },
             ],
           },
           {
@@ -137,7 +149,9 @@ const mockScenarioAnimation: ScenarioAnimation = {
             keyframes: [
               { t: 0, value: { x: 400, y: 430 } },
               { t: 1, value: { x: 400, y: 430 } },
-              { t: 2, value: { x: 260, y: 300 } },
+              { t: 1.35, value: { x: 380, y: 370 } },
+              { t: 1.8, value: { x: 305, y: 315 } },
+              { t: 2.4, value: { x: 235, y: 300 } },
             ],
           },
           {
@@ -145,7 +159,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 300, y: 300 } },
-              { t: 2, value: { x: 700, y: 300 } },
+              { t: 2.4, value: { x: 700, y: 300 } },
             ],
           },
         ],
@@ -159,7 +173,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             keyframes: [
               { t: 0, value: { x: 400, y: 430 } },
               { t: 1, value: { x: 350, y: 360 } },
-              { t: 2, value: { x: 350, y: 360 } },
+              { t: 2.4, value: { x: 350, y: 360 } },
             ],
           },
           {
@@ -167,7 +181,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 360, y: 260 } },
-              { t: 2, value: { x: 620, y: 260 } },
+              { t: 2.4, value: { x: 660, y: 260 } },
             ],
           },
           {
@@ -175,7 +189,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 300, y: 300 } },
-              { t: 2, value: { x: 700, y: 300 } },
+              { t: 2.4, value: { x: 700, y: 300 } },
             ],
           },
         ],
@@ -188,7 +202,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 400, y: 430 } },
-              { t: 2, value: { x: 400, y: 430 } },
+              { t: 2.4, value: { x: 400, y: 430 } },
             ],
           },
           {
@@ -196,7 +210,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 360, y: 260 } },
-              { t: 2, value: { x: 620, y: 260 } },
+              { t: 2.4, value: { x: 660, y: 260 } },
             ],
           },
           {
@@ -204,7 +218,7 @@ const mockScenarioAnimation: ScenarioAnimation = {
             property: "position",
             keyframes: [
               { t: 0, value: { x: 300, y: 300 } },
-              { t: 2, value: { x: 700, y: 300 } },
+              { t: 2.4, value: { x: 700, y: 300 } },
             ],
           },
         ],

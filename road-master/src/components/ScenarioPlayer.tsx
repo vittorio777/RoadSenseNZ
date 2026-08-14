@@ -1,60 +1,170 @@
-import { useState } from 'react'
-import ScenarioCanvas from './ScenarioCanvas';
-import type {InterScenario, Scenario} from '../contracts/scenario';
+import { useState } from "react";
+import ScenarioCanvas from "./ScenarioCanvas";
+import type { InterScenario, Scenario } from "../contracts/scenario";
 
-const ScenarioPlayer = ({mockScenario, handleUserSelections, userSelectedOption}: {mockScenario: Scenario, handleUserSelections: (optionIndex: number) => void; userSelectedOption:(number | null)}) => {
-  const [replayKey, setReplayKey] = useState(0); // 用于重置动画
-  const [interScenario, setInterScenario] = useState<InterScenario>({
-      tracks: mockScenario.animations.script.introTracks,
-      duration: mockScenario.animations.script.introDuration,
-      width: mockScenario.animations.width,
-      height: mockScenario.animations.height,
-      templateName: mockScenario.animations.template
-    })
+const ScenarioPlayer = ({
+  mockScenario,
+  handleUserSelections,
+  userSelectedOption,
+  isWideLayout = false,
+}: {
+  mockScenario: Scenario;
+  handleUserSelections: (optionIndex: number) => void;
+  userSelectedOption: number | null;
+  isWideLayout?: boolean;
+}) => {
+  const [replayKey, setReplayKey] = useState(0);
+  const [interScenario, setInterScenario] = useState<InterScenario>(
+    getIntroScenario(mockScenario),
+  );
 
   function handleOptionSelect(optionId: string) {
-    const optionIndex = optionId.charCodeAt(0) - 'A'.charCodeAt(0);
-    const newInterScenario = {...interScenario}
-    newInterScenario.tracks = mockScenario.animations.script.optionTracks[optionIndex].tracks
+    const optionIndex = optionId.charCodeAt(0) - "A".charCodeAt(0);
+    const optionTrack = mockScenario.animations.script.optionTracks[optionIndex];
 
-    setInterScenario(newInterScenario);
-    setReplayKey(prev => prev + 1); // 通过改变 key 来重置动画
+    setInterScenario({
+      ...interScenario,
+      tracks: optionTrack.tracks,
+      duration: mockScenario.animations.script.optionDuration,
+    });
+    setReplayKey((prev) => prev + 1);
     handleUserSelections(optionIndex);
   }
 
+  function handleReplaySetup() {
+    setInterScenario(getIntroScenario(mockScenario));
+    setReplayKey((prev) => prev + 1);
+  }
+
+  const selectedOption =
+    userSelectedOption != null
+      ? mockScenario.questions.options[userSelectedOption]
+      : null;
+  const correctOption = mockScenario.questions.options.find(
+    (option) => option.isCorrect,
+  );
 
   return (
-    <div>
-      {/* 画布 */}
-      <div>
-        <ScenarioCanvas key={replayKey} scenario={interScenario} />
-      </div>
+    <div className="space-y-4">
+      <section className="relative overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 px-4 py-3">
+        <ScenarioCanvas
+          key={replayKey}
+          scenario={interScenario}
+          isWideLayout={isWideLayout}
+        />
+        <div className="absolute bottom-3 right-3">
+          <button
+            type="button"
+            onClick={handleReplaySetup}
+            className="rounded-md border border-zinc-300 bg-white/95 px-2.5 py-1.5 text-xs font-medium text-zinc-700 shadow-sm hover:bg-white"
+          >
+            Replay setup
+          </button>
+        </div>
+      </section>
 
-      <h2>{mockScenario.questions.prompt}</h2>
-
-      {/* 回答选项 */}
-      <div>
-        <ul>
-          {mockScenario.questions.options.map(option => (
-            <li key={option.id} onClick={() => handleOptionSelect(option.id)} 
-            style={{cursor: 'pointer', color: userSelectedOption === (option.id.charCodeAt(0) - 'A'.charCodeAt(0)) ? (option.isCorrect ? 'lightgreen' : 'red') : 'lightgray'}}>
-              {option.id}. {option.text}
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* 问题解析 */}
-      <div>
-        {userSelectedOption != null && (
+      <div className="rounded-lg border border-zinc-200 bg-white">
+        <section className="border-b border-zinc-200 px-6 py-4">
           <div>
-            <h3>Explanation:</h3>
-            <p>{mockScenario.questions.explanation}</p>
+            <p className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+              Question
+            </p>
+            <h2 className="mt-2 pl-4 text-[17px] font-semibold leading-6 text-zinc-950">
+              {mockScenario.questions.prompt}
+            </h2>
+            <p className="mt-1 pl-4 text-sm leading-5 text-zinc-600">
+              {mockScenario.meta.preview}
+            </p>
           </div>
+        </section>
+
+        <section className="px-6 py-3">
+          <ul className={["grid gap-2", isWideLayout ? "grid-cols-2" : ""].join(" ")}>
+            {mockScenario.questions.options.map((option) => {
+              const optionIndex = option.id.charCodeAt(0) - "A".charCodeAt(0);
+              const isSelected = userSelectedOption === optionIndex;
+
+              return (
+                <li key={option.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleOptionSelect(option.id)}
+                    className={[
+                      "group flex h-full w-full items-center gap-3 rounded-md border px-4 py-2.5 text-left transition",
+                      isSelected
+                        ? option.isCorrect
+                          ? "border-green-300 bg-green-50"
+                          : "border-red-300 bg-red-50"
+                        : "border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50",
+                    ].join(" ")}
+                  >
+                    <span
+                      className={[
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
+                        isSelected
+                          ? option.isCorrect
+                            ? "border-green-600 bg-green-600 text-white"
+                            : "border-red-600 bg-red-600 text-white"
+                          : "border-zinc-300 bg-zinc-50 text-zinc-700 group-hover:border-zinc-500",
+                      ].join(" ")}
+                    >
+                      {option.id}
+                    </span>
+                    <span className="text-sm leading-5 text-zinc-800">
+                      {option.text}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        {selectedOption && (
+          <section
+            className={[
+              "border-t px-6 py-5",
+              selectedOption.isCorrect
+                ? "border-green-200 bg-green-50/70"
+                : "border-red-200 bg-red-50/70",
+            ].join(" ")}
+          >
+            <div className="flex items-start gap-3">
+              <span
+                className={[
+                  "mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full",
+                  selectedOption.isCorrect ? "bg-green-600" : "bg-red-600",
+                ].join(" ")}
+              />
+              <div>
+                <h3 className="text-sm font-semibold text-zinc-950">
+                  {selectedOption.isCorrect ? "Correct" : "Review this choice"}
+                </h3>
+                {!selectedOption.isCorrect && correctOption && (
+                  <p className="mt-2 text-sm font-medium text-zinc-800">
+                    Correct answer: {correctOption.id}. {correctOption.text}
+                  </p>
+                )}
+                <p className="mt-2 text-sm leading-6 text-zinc-700">
+                  {mockScenario.questions.explanation}
+                </p>
+              </div>
+            </div>
+          </section>
         )}
       </div>
     </div>
-  )
+  );
+};
+
+function getIntroScenario(mockScenario: Scenario): InterScenario {
+  return {
+    tracks: mockScenario.animations.script.introTracks,
+    duration: mockScenario.animations.script.introDuration,
+    width: mockScenario.animations.width,
+    height: mockScenario.animations.height,
+    templateName: mockScenario.animations.template,
+  };
 }
 
-export default ScenarioPlayer
+export default ScenarioPlayer;

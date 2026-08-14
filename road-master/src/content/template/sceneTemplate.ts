@@ -2,14 +2,43 @@ const T_INTERSECTION_001 = {
   id: "T_INTERSECTION_001",
   width: 800,
   height: 600,
-  background: "#f3f3f3",
+  background: "#e7efe3",
   shapes: [
-    { type: "rect", x: 0, y: 250, width: 800, height: 100, fill: "#555" },
-    { type: "rect", x: 350, y: 300, width: 100, height: 300, fill: "#555" },
+    { type: "rect", x: 0, y: 218, width: 800, height: 164, fill: "#47515c" },
+    { type: "rect", x: 318, y: 300, width: 144, height: 300, fill: "#47515c" },
+    { type: "circle", x: 390, y: 300, radius: 82, fill: "#47515c" },
 
-    { type: "line", x1: 0, y1: 300, x2: 350, y2: 300, stroke: "#f5f5f5", lineWidth: 3, dash: [20, 16] },
-    { type: "line", x1: 450, y1: 300, x2: 800, y2: 300, stroke: "#f5f5f5", lineWidth: 3, dash: [20, 16] },
-    { type: "line", x1: 400, y1: 350, x2: 400, y2: 600, stroke: "#f5f5f5", lineWidth: 3, dash: [20, 16] },
+    { type: "line", x1: 0, y1: 218, x2: 800, y2: 218, stroke: "#d7ded6", lineWidth: 4 },
+    { type: "line", x1: 0, y1: 382, x2: 318, y2: 382, stroke: "#d7ded6", lineWidth: 4 },
+    { type: "line", x1: 462, y1: 382, x2: 800, y2: 382, stroke: "#d7ded6", lineWidth: 4 },
+    { type: "line", x1: 318, y1: 382, x2: 318, y2: 600, stroke: "#d7ded6", lineWidth: 4 },
+    { type: "line", x1: 462, y1: 382, x2: 462, y2: 600, stroke: "#d7ded6", lineWidth: 4 },
+
+    { type: "line", x1: 0, y1: 300, x2: 318, y2: 300, stroke: "#eef2f7", lineWidth: 3, dash: [34, 24] },
+    { type: "line", x1: 462, y1: 300, x2: 800, y2: 300, stroke: "#eef2f7", lineWidth: 3, dash: [34, 24] },
+    { type: "line", x1: 390, y1: 382, x2: 390, y2: 600, stroke: "#eef2f7", lineWidth: 3, dash: [30, 22] },
+
+    { type: "line", x1: 326, y1: 392, x2: 386, y2: 392, stroke: "#f8fafc", lineWidth: 5 },
+    {
+      type: "path",
+      fill: "#f8fafc",
+      points: [
+        { x: 342, y: 412 },
+        { x: 370, y: 412 },
+        { x: 356, y: 436 },
+      ],
+      close: true,
+    },
+    {
+      type: "path",
+      fill: "#47515c",
+      points: [
+        { x: 350, y: 416 },
+        { x: 362, y: 416 },
+        { x: 356, y: 427 },
+      ],
+      close: true,
+    },
   ],
 } as const;
 

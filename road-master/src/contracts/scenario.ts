@@ -1,25 +1,25 @@
 export type Scenario = {
-    meta: ScenarioMeta;
-    questions: ScenarioQuestion;
-    animations: ScenarioAnimation;
+  meta: ScenarioMeta;
+  questions: ScenarioQuestion;
+  animations: ScenarioAnimation;
 };
 
-// 元数据相关类型
+// Scenario metadata.
 export type ScenarioMeta = {
-    scenarioId: string;
-    interactionType: InteractionType;
-    stageGroup: StageGroup;
-    stage: Stage;  
-    tags: Tag[];
-    articles: ArticleId[];
-    preview: string;
-    location: RealLocation;
+  scenarioId: string;
+  interactionType: InteractionType;
+  stageGroup: StageGroup;
+  stage: Stage;
+  tags: Tag[];
+  articles: ArticleId[];
+  preview: string;
+  location: RealLocation;
 };
 
-export type InteractionType = 
+export type InteractionType =
   | "AUTOPLAY_PAUSE_REPLAY"
-  | "LOOP_WITH_CHOICES" 
-  | "LOOP_GATED_CHOICES" 
+  | "LOOP_WITH_CHOICES"
+  | "LOOP_GATED_CHOICES"
   | "STATIC_ONLY";
 
 export type StageGroup =
@@ -53,34 +53,51 @@ export type Stage =
   | "accident_scene"
   | "loss_of_control";
 
+export type Tag =
+  // Priority
+  | "give-way"
+  | "stop-sign"
+  | "traffic-light"
+  | "pedestrian-priority"
 
-export type Tag =   // Priority
-                    "give-way" | "stop-sign" | "traffic-light" | "pedestrian-priority"
+  // Turning
+  | "right-turn"
+  | "left-turn"
+  | "straight-through"
+  | "u-turn"
 
-                    // Turning
-                    | "right-turn" | "left-turn" | "straight-through" | "u-turn"
+  // Lane behaviour
+  | "lane-change"
+  | "merge"
+  | "exit"
+  | "overtaking"
+  | "lane-discipline"
 
-                    // Lane behaviour
-                    | "lane-change" | "merge" | "exit" | "overtaking" | "lane-discipline"
+  // Parking
+  | "parallel-parking"
+  | "angle-parking"
+  | "parking-sign"
+  | "paid-parking"
 
-                    // Parking
-                    | "parallel-parking" | "angle-parking" | "parking-sign" | "paid-parking"
+  // Hazards
+  | "pedestrian"
+  | "cyclist"
+  | "emergency-vehicle"
+  | "school-bus"
 
-                    // Hazards
-                    | "pedestrian" | "cyclist" | "emergency-vehicle" | "school-bus"
-
-                    // Vehicle control
-                    | "skidding" | "breakdown";
+  // Vehicle control
+  | "skidding"
+  | "breakdown";
 
 export type ArticleId = string;
 
 export type Article = {
-    articleId: string;
-    type: "guide" | "rule" | "news";
-    title: string;
-    summary: string;
-    content: string;
-    relatedScenariosIds: string[]; // Array of related scenario IDs
+  articleId: string;
+  type: "guide" | "rule" | "news";
+  title: string;
+  summary: string;
+  content: string;
+  relatedScenariosIds: string[];
 };
 
 export type RealLocation = {
@@ -91,66 +108,69 @@ export type RealLocation = {
   source?: string;
 };
 
-// 问题相关类型
+// Question data.
 export type ScenarioQuestion = {
-    prompt: string;
-    options: Option[];
-    explanation: string;
+  prompt: string;
+  options: Option[];
+  explanation: string;
 };
 
 export type Option = {
-    id: "A" | "B" | "C" | "D";
-    text: string;
-    isCorrect?: boolean; // Optional field to indicate the correct answer
+  id: "A" | "B" | "C" | "D";
+  text: string;
+  isCorrect?: boolean;
 };
 
-// 动画相关类型
+// Animation data.
 export type ScenarioAnimation = {
-    template: string;
-    width: number;
-    height: number;
-    script: ScriptType;
+  template: string;
+  width: number;
+  height: number;
+  script: ScriptType;
 };
 
 export type ScriptType = {
-    introTracks: Track[];
-    introDuration: number;
-    optionTracks: OptionTrack[];
-    optionDuration: number;
+  introTracks: Track[];
+  introDuration: number;
+  optionTracks: OptionTrack[];
+  optionDuration: number;
 };
 
 export type OptionTrack = {
-    optionId:  "A" | "B" | "C" | "D";
-    tracks: Track[];
+  optionId: "A" | "B" | "C" | "D";
+  tracks: Track[];
 };
 
 export type Track = {
-    objectId: string;
-    property: "position" | "rotation";
-    keyframes: Keyframe[];
+  objectId: string;
+  property: "position" | "rotation" | "emotion" | "horn";
+  keyframes: Keyframe[];
 };
 
 export type Keyframe = {
-    t: number;
-    value: KeyframeValue;
+  t: number;
+  value: KeyframeValue;
 };
+
+export type DriverEmotion = "none" | "happy" | "sad" | "surprised" | "annoyed" | "alert";
 
 export type KeyframeValue =
   | { x: number; y: number }
-  | { deg: number };
+  | { deg: number }
+  | { emotion: DriverEmotion }
+  | { level: number };
 
-
-// 用于传递动画参数的简化类型
+// Simplified animation payload passed to the canvas player.
 export type InterScenario = {
-    tracks: Track[];
-    duration: number;
-    width: number;
-    height: number;
-    templateName: string;
+  tracks: Track[];
+  duration: number;
+  width: number;
+  height: number;
+  templateName: string;
 };
 
 export type Location = {
-    stageGroup: StageGroup | null;
-    stage: Stage | null;
-    scenarioIndex: number
-}
+  stageGroup: StageGroup | null;
+  stage: Stage | null;
+  scenarioIndex: number;
+};
