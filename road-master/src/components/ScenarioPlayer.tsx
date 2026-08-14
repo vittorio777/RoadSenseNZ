@@ -1,17 +1,25 @@
 import { useState } from "react";
 import ScenarioCanvas from "./ScenarioCanvas";
 import type { InterScenario, Scenario } from "../contracts/scenario";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const ScenarioPlayer = ({
   mockScenario,
   handleUserSelections,
   userSelectedOption,
   isWideLayout = false,
+  chapterNavigation,
 }: {
   mockScenario: Scenario;
   handleUserSelections: (optionIndex: number) => void;
   userSelectedOption: number | null;
   isWideLayout?: boolean;
+  chapterNavigation?: {
+    currentIndex: number;
+    total: number;
+    onPrevious: () => void;
+    onNext: () => void;
+  };
 }) => {
   const [replayKey, setReplayKey] = useState(0);
   const [interScenario, setInterScenario] = useState<InterScenario>(
@@ -65,16 +73,46 @@ const ScenarioPlayer = ({
 
       <div className="rounded-lg border border-zinc-200 bg-white">
         <section className="border-b border-zinc-200 px-6 py-4">
-          <div>
-            <p className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
-              Question
-            </p>
-            <h2 className="mt-2 pl-4 text-[17px] font-semibold leading-6 text-zinc-950">
-              {mockScenario.questions.prompt}
-            </h2>
-            <p className="mt-1 pl-4 text-sm leading-5 text-zinc-600">
-              {mockScenario.meta.preview}
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="inline-flex rounded-full bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
+                Question
+              </p>
+              <h2 className="mt-2 pl-4 text-[17px] font-semibold leading-6 text-zinc-950">
+                {mockScenario.questions.prompt}
+              </h2>
+              <p className="mt-1 pl-4 text-sm leading-5 text-zinc-600">
+                {mockScenario.meta.preview}
+              </p>
+            </div>
+
+            {chapterNavigation && (
+              <div className="mt-0.5 flex shrink-0 items-center gap-1">
+                <button
+                  type="button"
+                  onClick={chapterNavigation.onPrevious}
+                  disabled={chapterNavigation.currentIndex === 0}
+                  aria-label="Previous question"
+                  title="Previous question"
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-zinc-200 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-white disabled:hover:text-zinc-500"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={chapterNavigation.onNext}
+                  disabled={
+                    chapterNavigation.currentIndex >=
+                    chapterNavigation.total - 1
+                  }
+                  aria-label="Next question"
+                  title="Next question"
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-zinc-200 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-white disabled:hover:text-zinc-500"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PracticeSidebar from "./PracticeSidebar";
 import PracticeSidePanel, { MapPreviewDialog } from "./PracticeSidePanel";
 import ScenarioMap, {
@@ -14,11 +14,32 @@ import { ArrowLeft, MapPinned } from "lucide-react";
 export type PracticeMode = "home" | "chapter" | "map";
 type ScenarioEntrySource = "chapter" | "map" | null;
 const DEFAULT_MAP_REGION_ID: MapRegionId = "new_zealand";
+const PROGRESS_STORAGE_KEY = "roadsense.progress.v1";
+const PROGRESS_ENABLED_STORAGE_KEY = "roadsense.progress.enabled.v1";
 const EMPTY_LOCATION: Location = {
   stageGroup: null,
   stage: null,
   scenarioIndex: 0,
 };
+
+function readStoredProgress() {
+  if (typeof window === "undefined") return {};
+  if (window.localStorage.getItem(PROGRESS_ENABLED_STORAGE_KEY) === "false") {
+    return {};
+  }
+
+  try {
+    const storedProgress = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
+    return storedProgress ? JSON.parse(storedProgress) : {};
+  } catch {
+    return {};
+  }
+}
+
+function readProgressEnabled() {
+  if (typeof window === "undefined") return true;
+  return window.localStorage.getItem(PROGRESS_ENABLED_STORAGE_KEY) !== "false";
+}
 
 const PracticePage = () => {
   const [mode, setMode] = useState<PracticeMode>("home");
@@ -32,13 +53,15 @@ const PracticePage = () => {
   const [scenarioEntrySource, setScenarioEntrySource] =
     useState<ScenarioEntrySource>(null);
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
-  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(true);
   const [isMapPreviewOpen, setIsMapPreviewOpen] = useState(false);
   const [currentLocation, setCurrentLocation] =
     useState<Location>(EMPTY_LOCATION);
+  const [isProgressEnabled, setIsProgressEnabled] =
+    useState(readProgressEnabled);
   const [progressByScenarioId, setProgressByScenarioId] = useState<
     Record<string, number>
-  >({});
+  >(readStoredProgress);
 
   const currentMockScenarios =
     currentLocation.stageGroup && currentLocation.stage
@@ -107,6 +130,11 @@ const PracticePage = () => {
     }));
   }
 
+  function handleProgressToggle() {
+    setProgressByScenarioId({});
+    setIsProgressEnabled((current) => !current);
+  }
+
   function handleStageClick(stageGroup: StageGroup, stage: Stage) {
     setCurrentLocation({ stageGroup, stage, scenarioIndex: 0 });
     setMode("chapter");
@@ -153,6 +181,25 @@ const PracticePage = () => {
       } minmax(0, 1fr) ${isRightCollapsed ? "56px" : "320px"}`
     : `${isLeftCollapsed ? "56px" : "280px"} minmax(0, 1fr)`;
 
+  useEffect(() => {
+    window.localStorage.setItem(
+      PROGRESS_ENABLED_STORAGE_KEY,
+      String(isProgressEnabled),
+    );
+  }, [isProgressEnabled]);
+
+  useEffect(() => {
+    if (!isProgressEnabled) {
+      window.localStorage.removeItem(PROGRESS_STORAGE_KEY);
+      return;
+    }
+
+    window.localStorage.setItem(
+      PROGRESS_STORAGE_KEY,
+      JSON.stringify(progressByScenarioId),
+    );
+  }, [isProgressEnabled, progressByScenarioId]);
+
   return (
     <div className="h-screen overflow-hidden bg-white text-zinc-900">
       <div className="grid h-full" style={{ gridTemplateColumns }}>
@@ -169,6 +216,8 @@ const PracticePage = () => {
               onHomeClick={handleHomeClick}
               onMapRegionClick={handleMapRegionChange}
               onStageClick={handleStageClick}
+              isProgressEnabled={isProgressEnabled}
+              onToggleProgress={handleProgressToggle}
             />
           </aside>
         </div>
@@ -218,6 +267,25 @@ const PracticePage = () => {
                   mockScenario={currentMockScenario}
                   handleUserSelections={handleUserSelections}
                   isWideLayout={isWideScenarioLayout}
+                  chapterNavigation={
+                    scenarioEntrySource === "chapter"
+                      ? {
+                          currentIndex: currentLocation.scenarioIndex,
+                          total: currentMockScenarios.length,
+                          onPrevious: () =>
+                            handleScenarioChange(
+                              Math.max(0, currentLocation.scenarioIndex - 1),
+                            ),
+                          onNext: () =>
+                            handleScenarioChange(
+                              Math.min(
+                                currentMockScenarios.length - 1,
+                                currentLocation.scenarioIndex + 1,
+                              ),
+                            ),
+                        }
+                      : undefined
+                  }
                   userSelectedOption={
                     progressByScenarioId[currentMockScenario.meta.scenarioId] ??
                     null
