@@ -6,6 +6,7 @@ import type {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { Scenario } from "../contracts/scenario";
+import { STAGE_LABELS } from "../config/stageConfig";
 
 type MapLibreRuntime = {
   Map: typeof import("maplibre-gl").Map;
@@ -433,7 +434,7 @@ function InteractiveScenarioMap({
 
     const titleEl = document.createElement("h3");
     titleEl.className = "scenario-map-popup-title";
-    titleEl.textContent = previewScenario.meta.stage.replaceAll("_", " ");
+    titleEl.textContent = STAGE_LABELS[previewScenario.meta.stage];
 
     const previewEl = document.createElement("p");
     previewEl.className = "scenario-map-popup-preview";

@@ -28,12 +28,19 @@ const inactiveModeButtonClass =
 const groupButtonClass =
   "flex min-h-10 w-full items-center justify-between gap-2 rounded-md px-4 py-1.5 text-left text-[15px] font-semibold text-zinc-900 hover:bg-zinc-50";
 const childButtonBaseClass =
-  "relative flex min-h-9 w-full items-center rounded-md px-4 py-1.5 text-left text-[13px] leading-5 transition";
+  "relative flex min-h-9 w-full items-center rounded-md px-4 py-1.5 text-left text-sm leading-6 transition";
 const activeChildButtonClass =
   "bg-blue-50/45 font-normal text-zinc-950 before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-blue-500";
 const inactiveChildButtonClass =
-  "font-normal text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900";
+  "font-normal text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900";
 const listGroupClass = "mx-4";
+const disabledStageGroups = new Set<StageGroup>([
+  "CountryRoad",
+  "Motorway",
+  "Hazards",
+  "Emergency",
+]);
+const disabledStages = new Set<Stage>(["urban_straight", "carpark"]);
 
 type SidebarNavProps = {
   mode: PracticeMode;
@@ -361,36 +368,54 @@ function ChapterContent({
   return (
     <div className={listGroupClass}>
       {STAGE_TREE.map((groupItem) => {
+        const isDisabled = disabledStageGroups.has(groupItem.group);
         const isExpanded = expandedGroups.includes(groupItem.group);
 
         return (
           <div key={groupItem.group} className="border-b border-zinc-200/40 py-1.5">
             <button
               type="button"
-              onClick={() => onGroupClick(groupItem.group)}
-              className={groupButtonClass}
+              onClick={() => {
+                if (isDisabled) return;
+                onGroupClick(groupItem.group);
+              }}
+              disabled={isDisabled}
+              className={[
+                groupButtonClass,
+                isDisabled
+                  ? "cursor-not-allowed !text-zinc-300 hover:bg-transparent"
+                  : "",
+              ].join(" ")}
             >
               <span>{STAGE_GROUP_LABELS[groupItem.group]}</span>
               <ChevronRight
                 size={16}
-                className={`text-zinc-400 transition-transform duration-200 ${
-                  isExpanded ? "rotate-90" : ""
+                className={`transition-transform duration-200 ${
+                  isDisabled ? "text-zinc-300" : "text-zinc-400"
+                } ${isExpanded ? "rotate-90" : ""
                 }`}
               />
             </button>
-            <ul className="ml-3 pt-0.5">
-              {isExpanded &&
-                groupItem.stages.map((stage) => {
+            {isExpanded && (
+              <ul className="ml-3 pt-0.5">
+                {groupItem.stages.map((stage) => {
                   const isCurrentStage = selectedStage === stage;
+                  const isStageDisabled = disabledStages.has(stage);
 
                   return (
                     <li key={stage}>
                       <button
                         type="button"
-                        onClick={() => onStageClick(groupItem.group, stage)}
+                        onClick={() => {
+                          if (isStageDisabled) return;
+                          onStageClick(groupItem.group, stage);
+                        }}
+                        disabled={isStageDisabled}
                         className={[
                           childButtonBaseClass,
-                          isCurrentStage
+                          isStageDisabled
+                            ? "cursor-not-allowed font-normal text-zinc-300 hover:bg-transparent"
+                            : isCurrentStage
                             ? activeChildButtonClass
                             : inactiveChildButtonClass,
                         ].join(" ")}
@@ -400,7 +425,8 @@ function ChapterContent({
                     </li>
                   );
                 })}
-            </ul>
+              </ul>
+            )}
           </div>
         );
       })}

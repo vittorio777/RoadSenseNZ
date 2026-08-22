@@ -1,4 +1,10 @@
-import type { DriverEmotion, Keyframe, KeyframeValue, Track } from "../contracts/scenario";
+import type {
+  DriverEmotion,
+  Keyframe,
+  KeyframeValue,
+  TrafficSignal,
+  Track,
+} from "../contracts/scenario";
 
 type Position = {
   x: number;
@@ -17,11 +23,16 @@ type Horn = {
   level: number;
 };
 
+type Signal = {
+  signal: TrafficSignal;
+};
+
 export type FrameObjectState = {
   position?: Position;
   rotation?: Rotation;
   emotion?: Emotion;
   horn?: Horn;
+  signal?: Signal;
 };
 
 const EPSILON = 0.0001;
@@ -41,6 +52,10 @@ function isEmotion(value: KeyframeValue): value is Emotion {
 
 function isHorn(value: KeyframeValue): value is Horn {
   return "level" in value;
+}
+
+function isSignal(value: KeyframeValue): value is Signal {
+  return "signal" in value;
 }
 
 function easeInOut(t: number) {
@@ -121,6 +136,13 @@ function sampleTrack(t: number, track: Track): KeyframeValue | null {
   }
 
   if (property === "position" && isPosition(startFrame.value) && isPosition(endFrame.value)) {
+    if (
+      Math.abs(startFrame.value.x - endFrame.value.x) < EPSILON &&
+      Math.abs(startFrame.value.y - endFrame.value.y) < EPSILON
+    ) {
+      return startFrame.value;
+    }
+
     const previousFrame = keyframes[Math.max(0, frameIndex - 1)];
     const nextFrame = keyframes[Math.min(keyframes.length - 1, frameIndex + 2)];
     const previous = isPosition(previousFrame.value) ? previousFrame.value : startFrame.value;
@@ -147,7 +169,25 @@ function directionFromTrack(t: number, track: Track): Rotation | null {
 
   const dx = after.x - before.x;
   const dy = after.y - before.y;
-  if (Math.abs(dx) + Math.abs(dy) < EPSILON) return null;
+  if (Math.abs(dx) + Math.abs(dy) < EPSILON) {
+    const frameIndex = findFrameIndex(t, track.keyframes);
+
+    for (let index = frameIndex; index > 0; index -= 1) {
+      const current = track.keyframes[index].value;
+      const previous = track.keyframes[index - 1].value;
+      if (!isPosition(current) || !isPosition(previous)) continue;
+
+      const previousDx = current.x - previous.x;
+      const previousDy = current.y - previous.y;
+      if (Math.abs(previousDx) + Math.abs(previousDy) < EPSILON) continue;
+
+      return {
+        deg: (Math.atan2(previousDy, previousDx) * 180) / Math.PI,
+      };
+    }
+
+    return null;
+  }
 
   return {
     deg: (Math.atan2(dy, dx) * 180) / Math.PI,
@@ -180,6 +220,10 @@ export function getFrameStates(t: number, tracks: Track[]): Record<string, Frame
 
     if (track.property === "horn" && isHorn(value)) {
       currentStates[track.objectId].horn = value;
+    }
+
+    if (track.property === "signal" && isSignal(value)) {
+      currentStates[track.objectId].signal = value;
     }
   });
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import ScenarioCanvas from "./ScenarioCanvas";
 import type { InterScenario, Scenario } from "../contracts/scenario";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import StaticVisualRenderer from "./staticVisual/StaticVisualRenderer";
 
 const ScenarioPlayer = ({
   mockScenario,
@@ -25,17 +26,33 @@ const ScenarioPlayer = ({
   const [interScenario, setInterScenario] = useState<InterScenario>(
     getIntroScenario(mockScenario),
   );
+  const interactionType = mockScenario.meta.interactionType;
+  const isAutoplayPauseReplay = interactionType === "AUTOPLAY_PAUSE_REPLAY";
+  const isStaticOnly = interactionType === "STATIC_ONLY";
+  const shouldUseStaticVisual = isStaticOnly && Boolean(mockScenario.staticVisual);
+  const isLoopMode =
+    interactionType === "LOOP_WITH_CHOICES" ||
+    interactionType === "LOOP_GATED_CHOICES";
+  const playbackMode = isStaticOnly ? "static" : isLoopMode ? "loop" : "once";
 
   function handleOptionSelect(optionId: string) {
     const optionIndex = optionId.charCodeAt(0) - "A".charCodeAt(0);
-    const optionTrack = mockScenario.animations.script.optionTracks[optionIndex];
 
-    setInterScenario({
-      ...interScenario,
-      tracks: optionTrack.tracks,
-      duration: mockScenario.animations.script.optionDuration,
-    });
-    setReplayKey((prev) => prev + 1);
+    if (isAutoplayPauseReplay) {
+      const optionTrack = mockScenario.animations.script.optionTracks.find(
+        (track) => track.optionId === optionId,
+      );
+
+      if (optionTrack) {
+        setInterScenario({
+          ...interScenario,
+          tracks: optionTrack.tracks,
+          duration: mockScenario.animations.script.optionDuration,
+        });
+        setReplayKey((prev) => prev + 1);
+      }
+    }
+
     handleUserSelections(optionIndex);
   }
 
@@ -55,20 +72,30 @@ const ScenarioPlayer = ({
   return (
     <div className="space-y-4">
       <section className="relative overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 px-4 py-3">
-        <ScenarioCanvas
-          key={replayKey}
-          scenario={interScenario}
-          isWideLayout={isWideLayout}
-        />
-        <div className="absolute bottom-3 right-3">
-          <button
-            type="button"
-            onClick={handleReplaySetup}
-            className="rounded-md border border-zinc-300 bg-white/95 px-2.5 py-1.5 text-xs font-medium text-zinc-700 shadow-sm hover:bg-white"
-          >
-            Replay setup
-          </button>
-        </div>
+        {shouldUseStaticVisual && mockScenario.staticVisual ? (
+          <StaticVisualRenderer
+            visual={mockScenario.staticVisual}
+            isWideLayout={isWideLayout}
+          />
+        ) : (
+          <ScenarioCanvas
+            key={replayKey}
+            scenario={interScenario}
+            isWideLayout={isWideLayout}
+            playback={playbackMode}
+          />
+        )}
+        {isAutoplayPauseReplay && (
+          <div className="absolute bottom-3 right-3">
+            <button
+              type="button"
+              onClick={handleReplaySetup}
+              className="rounded-md border border-zinc-300 bg-white/95 px-2.5 py-1.5 text-xs font-medium text-zinc-700 shadow-sm hover:bg-white"
+            >
+              Replay setup
+            </button>
+          </div>
+        )}
       </section>
 
       <div className="rounded-lg border border-zinc-200 bg-white">

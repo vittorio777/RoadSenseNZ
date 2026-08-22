@@ -3,19 +3,19 @@ import type { InterScenario } from "../contracts/scenario";
 import { getFrameStates, type FrameObjectState } from "../engine/scriptPlayer";
 import { drawSceneTemplate } from "../engine/sceneDrawer";
 import { STAGE_TEMPLATES } from "../content/template/sceneTemplate";
+import { drawVehicle, getVehiclePalette } from "../engine/vehicleDrawer";
 
 type Props = {
   scenario: InterScenario;
   isWideLayout?: boolean;
+  playback?: "once" | "loop" | "static";
 };
 
-const VEHICLE_COLORS: Record<string, { body: string; roof: string; trim: string }> = {
-  car1: { body: "#2563eb", roof: "#dbeafe", trim: "#1e3a8a" },
-  car2: { body: "#dc2626", roof: "#fee2e2", trim: "#7f1d1d" },
-  car3: { body: "#16a34a", roof: "#dcfce7", trim: "#14532d" },
-};
-
-const ScenarioCanvas = ({ scenario, isWideLayout = false }: Props) => {
+const ScenarioCanvas = ({
+  scenario,
+  isWideLayout = false,
+  playback = "once",
+}: Props) => {
   const { tracks, duration, width, height, templateName } = scenario;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -31,18 +31,30 @@ const ScenarioCanvas = ({ scenario, isWideLayout = false }: Props) => {
     let animationFrameId = 0;
     let startTime: number | null = null;
 
-    function draw(t: number) {
-      if (!startTime) startTime = t;
-      const elapsed = (t - startTime) / 1000;
-      const currentTime = Math.min(elapsed, duration);
+    function drawAt(currentTime: number) {
       const frameStates = getFrameStates(currentTime, tracks);
 
       drawScene(ctx, templateName);
+      drawTrafficSignals(ctx, frameStates);
       drawHornEffects(ctx, frameStates);
       drawObjects(ctx, frameStates);
       drawDriverEmotions(ctx, frameStates);
+    }
 
-      if (elapsed < duration) {
+    if (playback === "static" || duration <= 0) {
+      drawAt(0);
+      return;
+    }
+
+    function draw(t: number) {
+      if (!startTime) startTime = t;
+      const elapsed = (t - startTime) / 1000;
+      const currentTime =
+        playback === "loop" ? elapsed % duration : Math.min(elapsed, duration);
+
+      drawAt(currentTime);
+
+      if (playback === "loop" || elapsed < duration) {
         animationFrameId = requestAnimationFrame(draw);
       }
     }
@@ -52,7 +64,7 @@ const ScenarioCanvas = ({ scenario, isWideLayout = false }: Props) => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [duration, templateName, tracks]);
+  }, [duration, playback, templateName, tracks]);
 
   return (
     <canvas
@@ -80,48 +92,94 @@ function drawScene(ctx: CanvasRenderingContext2D, templateName: string) {
 function drawObjects(ctx: CanvasRenderingContext2D, frameStates: Record<string, FrameObjectState>) {
   for (const [objectId, state] of Object.entries(frameStates)) {
     if (!state.position) continue;
+    if (state.signal) continue;
 
     if (objectId.startsWith("pedestrian")) {
       drawPedestrian(ctx, state.position.x, state.position.y);
       continue;
     }
 
-    drawVehicle(ctx, objectId, state);
+    drawScenarioVehicle(ctx, objectId, state);
   }
 }
 
-function drawVehicle(ctx: CanvasRenderingContext2D, objectId: string, state: FrameObjectState) {
-  if (!state.position) return;
+function drawTrafficSignals(
+  ctx: CanvasRenderingContext2D,
+  frameStates: Record<string, FrameObjectState>,
+) {
+  for (const state of Object.values(frameStates)) {
+    if (!state.position || !state.signal) continue;
 
-  const { x, y } = state.position;
-  const rotation = ((state.rotation?.deg ?? 0) * Math.PI) / 180;
-  const palette = VEHICLE_COLORS[objectId] ?? { body: "#475569", roof: "#f8fafc", trim: "#1e293b" };
+    drawTrafficSignal(
+      ctx,
+      state.position.x,
+      state.position.y,
+      state.signal.signal,
+      state.rotation?.deg,
+    );
+  }
+}
 
+function drawTrafficSignal(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  signal: NonNullable<FrameObjectState["signal"]>["signal"],
+  rotationDeg = 0,
+) {
   ctx.save();
   ctx.translate(x, y);
-  ctx.rotate(rotation);
+  ctx.rotate((rotationDeg * Math.PI) / 180);
 
   ctx.shadowColor = "rgba(15, 23, 42, 0.18)";
   ctx.shadowBlur = 8;
-  ctx.shadowOffsetY = 3;
-  roundedRect(ctx, -22, -12, 44, 24, 6);
-  ctx.fillStyle = palette.body;
+  ctx.shadowOffsetY = 2;
+
+  roundedRect(ctx, -15, -29, 30, 58, 8);
+  ctx.fillStyle = "#1f2937";
   ctx.fill();
 
   ctx.shadowColor = "transparent";
-  roundedRect(ctx, -7, -8, 16, 16, 4);
-  ctx.fillStyle = palette.roof;
+
+  ctx.fillStyle = signal === "red" ? "#ef4444" : "#4b5563";
+  ctx.beginPath();
+  ctx.arc(0, -13, 8, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = palette.trim;
-  ctx.fillRect(13, -7, 5, 14);
-  ctx.fillStyle = "#111827";
-  ctx.fillRect(-15, -15, 8, 4);
-  ctx.fillRect(7, -15, 8, 4);
-  ctx.fillRect(-15, 11, 8, 4);
-  ctx.fillRect(7, 11, 8, 4);
+  ctx.fillStyle = signal === "green" ? "#22c55e" : "#4b5563";
+  ctx.beginPath();
+  ctx.arc(0, 13, 8, 0, Math.PI * 2);
+  ctx.fill();
 
   ctx.restore();
+}
+
+function drawScenarioVehicle(ctx: CanvasRenderingContext2D, objectId: string, state: FrameObjectState) {
+  if (!state.position) return;
+
+  drawVehicle(ctx, {
+    x: state.position.x,
+    y: state.position.y,
+    rotationDeg: state.rotation?.deg,
+    palette: getVehiclePalette(objectId),
+  });
+}
+
+function roundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y, x + width, y, radius);
+  ctx.closePath();
 }
 
 function drawPedestrian(ctx: CanvasRenderingContext2D, x: number, y: number) {
@@ -144,23 +202,6 @@ function drawPedestrian(ctx: CanvasRenderingContext2D, x: number, y: number) {
   ctx.lineTo(7, 17);
   ctx.stroke();
   ctx.restore();
-}
-
-function roundedRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  radius: number,
-) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.arcTo(x + width, y, x + width, y + height, radius);
-  ctx.arcTo(x + width, y + height, x, y + height, radius);
-  ctx.arcTo(x, y + height, x, y, radius);
-  ctx.arcTo(x, y, x + width, y, radius);
-  ctx.closePath();
 }
 
 function drawHornEffects(ctx: CanvasRenderingContext2D, frameStates: Record<string, FrameObjectState>) {

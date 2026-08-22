@@ -1,4 +1,5 @@
 import type * as Template from "../contracts/template";
+import { drawVehicle } from "./vehicleDrawer";
 
 export function drawSceneTemplate(
   ctx: CanvasRenderingContext2D,
@@ -36,6 +37,10 @@ function drawShape(ctx: CanvasRenderingContext2D, shape: Template.StageShape) {
       drawText(ctx, shape);
       break;
 
+    case "vehicle":
+      drawVehicleShape(ctx, shape);
+      break;
+
     default:
       assertNever(shape);
   }
@@ -43,7 +48,14 @@ function drawShape(ctx: CanvasRenderingContext2D, shape: Template.StageShape) {
 
 function drawRect(ctx: CanvasRenderingContext2D, shape: Template.RectShape) {
   ctx.fillStyle = shape.fill;
-  ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+
+  if (!shape.radius) {
+    ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+    return;
+  }
+
+  roundedRect(ctx, shape.x, shape.y, shape.width, shape.height, shape.radius);
+  ctx.fill();
 }
 
 function drawCircle(ctx: CanvasRenderingContext2D, shape: Template.CircleShape) {
@@ -103,9 +115,46 @@ function drawPath(ctx: CanvasRenderingContext2D, shape: Template.PathShape) {
 }
 
 function drawText(ctx: CanvasRenderingContext2D, shape: Template.TextShape) {
+  ctx.save();
+  ctx.translate(shape.x, shape.y);
+  ctx.rotate(((shape.rotation ?? 0) * Math.PI) / 180);
   ctx.fillStyle = shape.fill;
   ctx.font = shape.font ?? "16px sans-serif";
-  ctx.fillText(shape.text, shape.x, shape.y);
+  ctx.textAlign = shape.align ?? "left";
+  ctx.fillText(shape.text, 0, 0);
+  ctx.restore();
+}
+
+function drawVehicleShape(ctx: CanvasRenderingContext2D, shape: Template.VehicleShape) {
+  drawVehicle(ctx, {
+    x: shape.x,
+    y: shape.y,
+    rotationDeg: shape.rotation,
+    palette: shape.palette,
+  });
+}
+
+function roundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  const safeRadius = Math.min(radius, width / 2, height / 2);
+
+  ctx.beginPath();
+  ctx.moveTo(x + safeRadius, y);
+  ctx.lineTo(x + width - safeRadius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + safeRadius);
+  ctx.lineTo(x + width, y + height - safeRadius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - safeRadius, y + height);
+  ctx.lineTo(x + safeRadius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - safeRadius);
+  ctx.lineTo(x, y + safeRadius);
+  ctx.quadraticCurveTo(x, y, x + safeRadius, y);
+  ctx.closePath();
 }
 
 function assertNever(value: never): never {

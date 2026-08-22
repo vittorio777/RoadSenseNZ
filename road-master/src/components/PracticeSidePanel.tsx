@@ -5,6 +5,7 @@ import { getVisibleScenarios } from "./ScenarioMap";
 import ScenarioMap from "./ScenarioMap";
 import type { Location, Scenario } from "../contracts/scenario";
 import { MapPinned, Maximize2, PanelRightClose, PanelRightOpen, X } from "lucide-react";
+import { STAGE_LABELS } from "../config/stageConfig";
 
 const MAP_DIALOG_MARGIN = 16;
 const MAP_DIALOG_MIN_WIDTH = 420;
@@ -612,7 +613,7 @@ function MapDetailsPanel({
                 </span>
                 <div>
                   <p className="text-sm font-medium text-zinc-950">
-                    {scenario.meta.stage.replaceAll("_", " ")}
+                    {STAGE_LABELS[scenario.meta.stage]}
                   </p>
                   <p className="mt-1 text-sm leading-5 text-zinc-600">
                     {scenario.meta.location.name}

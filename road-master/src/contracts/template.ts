@@ -10,6 +10,7 @@ export type RectShape = {
   width: number;
   height: number;
   fill: string;
+  radius?: number;
 };
 
 export type CircleShape = {
@@ -50,6 +51,20 @@ export type TextShape = {
   text: string;
   fill: string;
   font?: string;
+  rotation?: number;
+  align?: "left" | "center" | "right";
+};
+
+export type VehicleShape = {
+  type: "vehicle";
+  x: number;
+  y: number;
+  rotation?: number;
+  palette?: {
+    body: string;
+    roof: string;
+    trim: string;
+  };
 };
 
 export type StageShape =
@@ -57,7 +72,8 @@ export type StageShape =
   | CircleShape
   | LineShape
   | PathShape
-  | TextShape;
+  | TextShape
+  | VehicleShape;
 
 export type StageTemplateData = {
   id: string;

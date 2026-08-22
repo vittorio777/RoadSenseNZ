@@ -1,7 +1,10 @@
+import type { StaticVisual } from "./staticVisual";
+
 export type Scenario = {
   meta: ScenarioMeta;
   questions: ScenarioQuestion;
   animations: ScenarioAnimation;
+  staticVisual?: StaticVisual;
 };
 
 // Scenario metadata.
@@ -143,7 +146,7 @@ export type OptionTrack = {
 
 export type Track = {
   objectId: string;
-  property: "position" | "rotation" | "emotion" | "horn";
+  property: "position" | "rotation" | "emotion" | "horn" | "signal";
   keyframes: Keyframe[];
 };
 
@@ -153,12 +156,14 @@ export type Keyframe = {
 };
 
 export type DriverEmotion = "none" | "happy" | "sad" | "surprised" | "annoyed" | "alert";
+export type TrafficSignal = "red" | "green";
 
 export type KeyframeValue =
   | { x: number; y: number }
   | { deg: number }
   | { emotion: DriverEmotion }
-  | { level: number };
+  | { level: number }
+  | { signal: TrafficSignal };
 
 // Simplified animation payload passed to the canvas player.
 export type InterScenario = {
