@@ -4,7 +4,13 @@ import type { MapRegion } from "./ScenarioMap";
 import { getVisibleScenarios } from "./ScenarioMap";
 import ScenarioMap from "./ScenarioMap";
 import type { Location, Scenario } from "../contracts/scenario";
-import { MapPinned, Maximize2, PanelRightClose, PanelRightOpen, X } from "lucide-react";
+import {
+  MapPinned,
+  Maximize2,
+  PanelRightClose,
+  PanelRightOpen,
+  X,
+} from "lucide-react";
 import { STAGE_LABELS } from "../config/stageConfig";
 
 const MAP_DIALOG_MARGIN = 16;
@@ -107,7 +113,7 @@ function CollapsedQuestionTools({
   handleScenarioChange: (index: number) => void;
   onOpenMap: () => void;
 }) {
-  const previewQuestionCount = Math.max(currentMockScenarios.length, 30);
+  const previewQuestionCount = currentMockScenarios.length;
 
   return (
     <div className="flex h-full min-h-0 flex-col items-center border-l border-zinc-200 bg-zinc-50 pb-3 pt-4">
@@ -160,7 +166,9 @@ function CollapsedQuestionTools({
                 className={[
                   "flex h-7 w-7 items-center justify-center rounded-md border text-[11px] font-medium transition hover:border-zinc-400",
                   statusClass,
-                  isCurrentScenario ? "ring-2 ring-zinc-400 ring-offset-1 ring-offset-zinc-50" : "",
+                  isCurrentScenario
+                    ? "ring-2 ring-zinc-400 ring-offset-1 ring-offset-zinc-50"
+                    : "",
                 ].join(" ")}
               >
                 {index + 1}
@@ -207,7 +215,7 @@ function QuestionProgressPanel({
     const scenarioId = scenario.meta.scenarioId;
     return scenarioId in progressByScenarioId;
   }).length;
-  const previewQuestionCount = Math.max(currentMockScenarios.length, 30);
+  const previewQuestionCount = currentMockScenarios.length;
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="shrink-0">
@@ -263,7 +271,9 @@ function QuestionProgressPanel({
                 : "border-red-300 bg-red-100 text-red-700"
               : "border-zinc-200 bg-white text-zinc-600";
 
-            const currentClass = isCurrentScenario ? "ring-2 ring-zinc-400" : "";
+            const currentClass = isCurrentScenario
+              ? "ring-2 ring-zinc-400"
+              : "";
 
             return (
               <button
@@ -363,7 +373,10 @@ export function MapPreviewDialog({
     height: Math.min(680, window.innerHeight - 48),
   }));
   const [position, setPosition] = useState(() => ({
-    left: Math.max(24, (window.innerWidth - Math.min(760, window.innerWidth - 48)) / 2),
+    left: Math.max(
+      24,
+      (window.innerWidth - Math.min(760, window.innerWidth - 48)) / 2,
+    ),
     top: Math.max(24, (window.innerHeight - 680) / 2),
   }));
 
@@ -372,11 +385,17 @@ export function MapPreviewDialog({
       setSize((currentSize) => {
         const nextSize = {
           width: Math.min(
-            Math.max(MAP_DIALOG_MIN_WIDTH, window.innerWidth - MAP_DIALOG_MARGIN * 2),
+            Math.max(
+              MAP_DIALOG_MIN_WIDTH,
+              window.innerWidth - MAP_DIALOG_MARGIN * 2,
+            ),
             currentSize.width,
           ),
           height: Math.min(
-            Math.max(MAP_DIALOG_MIN_HEIGHT, window.innerHeight - MAP_DIALOG_MARGIN * 2),
+            Math.max(
+              MAP_DIALOG_MIN_HEIGHT,
+              window.innerHeight - MAP_DIALOG_MARGIN * 2,
+            ),
             currentSize.height,
           ),
         };
@@ -461,11 +480,17 @@ export function MapPreviewDialog({
       setSize({
         width: Math.min(
           maxWidth,
-          Math.max(MAP_DIALOG_MIN_WIDTH, startWidth + moveEvent.clientX - startX),
+          Math.max(
+            MAP_DIALOG_MIN_WIDTH,
+            startWidth + moveEvent.clientX - startX,
+          ),
         ),
         height: Math.min(
           maxHeight,
-          Math.max(MAP_DIALOG_MIN_HEIGHT, startHeight + moveEvent.clientY - startY),
+          Math.max(
+            MAP_DIALOG_MIN_HEIGHT,
+            startHeight + moveEvent.clientY - startY,
+          ),
         ),
       });
     }
@@ -484,7 +509,12 @@ export function MapPreviewDialog({
       <div
         data-map-dialog
         className="pointer-events-auto fixed flex min-h-0 flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-2xl"
-        style={{ left: position.left, top: position.top, width: size.width, height: size.height }}
+        style={{
+          left: position.left,
+          top: position.top,
+          width: size.width,
+          height: size.height,
+        }}
       >
         <div
           onPointerDown={handleDragStart}
