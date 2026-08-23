@@ -40,7 +40,11 @@ const disabledStageGroups = new Set<StageGroup>([
   "Hazards",
   "Emergency",
 ]);
-const disabledStages = new Set<Stage>(["urban_general", "car_parks"]);
+const disabledStages = new Set<Stage>([
+  "urban_general",
+  "car_parks",
+  "roundabouts",
+]);
 
 type SidebarNavProps = {
   mode: PracticeMode;
@@ -68,7 +72,9 @@ const PracticeSidebar = ({
   onToggleProgress,
 }: SidebarNavProps) => {
   const [expandedGroups, setExpandedGroups] = useState<StageGroup[]>([]);
-  const [expandedMapRegions, setExpandedMapRegions] = useState<MapRegionId[]>([]);
+  const [expandedMapRegions, setExpandedMapRegions] = useState<MapRegionId[]>(
+    [],
+  );
   const [selectedStage, setSelectedStage] = useState<Stage>();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
@@ -159,7 +165,10 @@ const PracticeSidebar = ({
           </button>
         </div>
 
-        <div ref={settingsRef} className="relative mt-auto flex w-full justify-center">
+        <div
+          ref={settingsRef}
+          className="relative mt-auto flex w-full justify-center"
+        >
           {isSettingsOpen && (
             <SettingsPanel
               isProgressEnabled={isProgressEnabled}
@@ -228,7 +237,9 @@ const PracticeSidebar = ({
               onClick={() => onModeChange("map")}
               className={[
                 modeButtonClass,
-                mode === "map" ? activeModeButtonClass : inactiveModeButtonClass,
+                mode === "map"
+                  ? activeModeButtonClass
+                  : inactiveModeButtonClass,
               ].join(" ")}
             >
               <span className="flex items-center justify-center gap-2">
@@ -334,9 +345,7 @@ function SettingsPanel({
         <button
           type="button"
           onClick={onToggleProgress}
-          aria-label={
-            isProgressEnabled ? "Turn memory off" : "Turn memory on"
-          }
+          aria-label={isProgressEnabled ? "Turn memory off" : "Turn memory on"}
           className={[
             "flex h-4 w-7 items-center rounded-full p-0.5 transition",
             isProgressEnabled ? "bg-blue-500/85" : "bg-zinc-300",
@@ -372,7 +381,10 @@ function ChapterContent({
         const isExpanded = expandedGroups.includes(groupItem.group);
 
         return (
-          <div key={groupItem.group} className="border-b border-zinc-200/40 py-1.5">
+          <div
+            key={groupItem.group}
+            className="border-b border-zinc-200/40 py-1.5"
+          >
             <button
               type="button"
               onClick={() => {
@@ -392,8 +404,7 @@ function ChapterContent({
                 size={16}
                 className={`transition-transform duration-200 ${
                   isDisabled ? "text-zinc-300" : "text-zinc-400"
-                } ${isExpanded ? "rotate-90" : ""
-                }`}
+                } ${isExpanded ? "rotate-90" : ""}`}
               />
             </button>
             {isExpanded && (
@@ -416,8 +427,8 @@ function ChapterContent({
                           isStageDisabled
                             ? "cursor-not-allowed font-normal text-zinc-300 hover:bg-transparent"
                             : isCurrentStage
-                            ? activeChildButtonClass
-                            : inactiveChildButtonClass,
+                              ? activeChildButtonClass
+                              : inactiveChildButtonClass,
                         ].join(" ")}
                       >
                         <span>{STAGE_LABELS[stage]}</span>
@@ -455,7 +466,10 @@ function MapContent({
         const isSelected = node.regionId === selectedRegionId;
 
         return (
-          <div key={node.regionId} className="border-b border-zinc-200/40 py-1.5">
+          <div
+            key={node.regionId}
+            className="border-b border-zinc-200/40 py-1.5"
+          >
             <button
               type="button"
               onClick={() => onMapGroupClick(node.regionId)}
