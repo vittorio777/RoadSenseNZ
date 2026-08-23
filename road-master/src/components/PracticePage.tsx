@@ -7,7 +7,12 @@ import ScenarioMap, {
   type MapRegionId,
 } from "./ScenarioMap";
 import ScenarioPlayer from "./ScenarioPlayer";
-import type { Location, Scenario, Stage, StageGroup } from "../contracts/scenario";
+import type {
+  Location,
+  Scenario,
+  Stage,
+  StageGroup,
+} from "../contracts/scenario";
 import { allMockScenario } from "../content/scenario/index";
 import { ArrowLeft, MapPinned } from "lucide-react";
 
@@ -43,8 +48,9 @@ function readProgressEnabled() {
 
 const PracticePage = () => {
   const [mode, setMode] = useState<PracticeMode>("home");
-  const [mapRegionId, setMapRegionId] =
-    useState<MapRegionId>(DEFAULT_MAP_REGION_ID);
+  const [mapRegionId, setMapRegionId] = useState<MapRegionId>(
+    DEFAULT_MAP_REGION_ID,
+  );
   const [mapViewport, setMapViewport] = useState<MapViewport>({
     center: getRegionById(DEFAULT_MAP_REGION_ID).center,
     zoom: getRegionById(DEFAULT_MAP_REGION_ID).zoom,
@@ -53,15 +59,14 @@ const PracticePage = () => {
   const [scenarioEntrySource, setScenarioEntrySource] =
     useState<ScenarioEntrySource>(null);
   const [isLeftCollapsed, setIsLeftCollapsed] = useState(false);
-  const [isRightCollapsed, setIsRightCollapsed] = useState(true);
+  const [isRightCollapsed, setIsRightCollapsed] = useState(false);
   const [isMapPreviewOpen, setIsMapPreviewOpen] = useState(false);
   const [currentLocation, setCurrentLocation] =
     useState<Location>(EMPTY_LOCATION);
   const [isProgressEnabled, setIsProgressEnabled] =
     useState(readProgressEnabled);
-  const [progressByScenarioId, setProgressByScenarioId] = useState<
-    Record<string, number>
-  >(readStoredProgress);
+  const [progressByScenarioId, setProgressByScenarioId] =
+    useState<Record<string, number>>(readStoredProgress);
 
   const currentMockScenarios =
     currentLocation.stageGroup && currentLocation.stage
@@ -209,9 +214,7 @@ const PracticePage = () => {
               mode={mode}
               isCollapsed={isLeftCollapsed}
               selectedRegionId={mapRegionId}
-              onToggleCollapse={() =>
-                setIsLeftCollapsed((current) => !current)
-              }
+              onToggleCollapse={() => setIsLeftCollapsed((current) => !current)}
               onModeChange={handleModeChange}
               onHomeClick={handleHomeClick}
               onMapRegionClick={handleMapRegionChange}
