@@ -177,6 +177,67 @@ const CROSS_INTERSECTION_RIGHT_TURN_SIGNAL_001 = {
   ],
 } as const;
 
+const SIGNALISED_OFFSET_LANES_001 = {
+  id: "SIGNALISED_OFFSET_LANES_001",
+  width: 800,
+  height: 600,
+  background: "#cddfc7",
+  shapes: [
+    { type: "path", fill: "#d9cfbd", points: [{ x: 18, y: 18 }, { x: 210, y: 14 }, { x: 220, y: 188 }, { x: 28, y: 204 }], close: true },
+    { type: "path", fill: "#eff0eb", points: [{ x: 52, y: 42 }, { x: 166, y: 34 }, { x: 174, y: 136 }, { x: 62, y: 146 }], close: true },
+    { type: "path", fill: "#d9cfbd", points: [{ x: 604, y: 22 }, { x: 782, y: 18 }, { x: 780, y: 200 }, { x: 590, y: 182 }], close: true },
+    { type: "path", fill: "#f0f0e8", points: [{ x: 642, y: 42 }, { x: 742, y: 40 }, { x: 736, y: 138 }, { x: 628, y: 126 }], close: true },
+    { type: "path", fill: "#d9cfbd", points: [{ x: 20, y: 408 }, { x: 220, y: 392 }, { x: 218, y: 582 }, { x: 18, y: 584 }], close: true },
+    { type: "path", fill: "#d9cfbd", points: [{ x: 590, y: 402 }, { x: 782, y: 420 }, { x: 780, y: 584 }, { x: 600, y: 584 }], close: true },
+    { type: "circle", x: 210, y: 190, radius: 28, fill: "#5e864d" },
+    { type: "circle", x: 184, y: 172, radius: 20, fill: "#789a5c" },
+    { type: "circle", x: 586, y: 188, radius: 26, fill: "#5a824a" },
+    { type: "circle", x: 214, y: 408, radius: 24, fill: "#62894e" },
+    { type: "circle", x: 594, y: 402, radius: 28, fill: "#5e864d" },
+
+    { type: "rect", x: 0, y: 220, width: 260, height: 200, fill: "#4b5563" },
+    { type: "path", fill: "#4b5563", points: [{ x: 240, y: 600 }, { x: 640, y: 600 }, { x: 640, y: 220 }, { x: 230, y: 220 }, { x: 250, y: 330 }, { x: 240, y: 600 }], close: true },
+    { type: "path", fill: "#4b5563", points: [{ x: 230, y: 0 }, { x: 640, y: 0 }, { x: 640, y: 220 }, { x: 230, y: 220 }], close: true },
+    { type: "path", fill: "#525d69", points: [{ x: 230, y: 220 }, { x: 640, y: 220 }, { x: 640, y: 382 }, { x: 260, y: 420 }, { x: 260, y: 220 }], close: true },
+
+    { type: "line", x1: 0, y1: 270, x2: 230, y2: 270, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+    { type: "line", x1: 0, y1: 320, x2: 230, y2: 320, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+    { type: "line", x1: 0, y1: 370, x2: 230, y2: 370, stroke: "#f8fafc", lineWidth: 4 },
+    { type: "line", x1: 320, y1: 600, x2: 320, y2: 420, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+    { type: "line", x1: 400, y1: 600, x2: 400, y2: 420, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+    { type: "line", x1: 480, y1: 600, x2: 480, y2: 420, stroke: "#f8fafc", lineWidth: 4 },
+    { type: "line", x1: 560, y1: 600, x2: 560, y2: 420, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+    { type: "line", x1: 325, y1: 0, x2: 325, y2: 220, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+    { type: "line", x1: 420, y1: 0, x2: 420, y2: 220, stroke: "#f8fafc", lineWidth: 4 },
+    { type: "line", x1: 515, y1: 0, x2: 515, y2: 220, stroke: "#e2e8f0", lineWidth: 3, dash: [28, 22] },
+
+    { type: "line", x1: 250, y1: 420, x2: 480, y2: 420, stroke: "#f8fafc", lineWidth: 5 },
+    { type: "line", x1: 420, y1: 220, x2: 628, y2: 220, stroke: "#f8fafc", lineWidth: 5 },
+    { type: "line", x1: 230, y1: 220, x2: 230, y2: 370, stroke: "#f8fafc", lineWidth: 5 },
+
+    { type: "line", x1: 400, y1: 420, x2: 325, y2: 220, stroke: "#f8fafc", lineWidth: 3, dash: [20, 16] },
+    { type: "line", x1: 480, y1: 420, x2: 420, y2: 220, stroke: "#f8fafc", lineWidth: 3, dash: [20, 16] },
+
+    { type: "line", x1: 285, y1: 538, x2: 285, y2: 506, stroke: "#f8fafc", lineWidth: 7 },
+    { type: "line", x1: 285, y1: 506, x2: 264, y2: 506, stroke: "#f8fafc", lineWidth: 7 },
+    { type: "path", fill: "#f8fafc", points: [{ x: 246, y: 506 }, { x: 266, y: 494 }, { x: 266, y: 518 }], close: true },
+    { type: "line", x1: 365, y1: 538, x2: 365, y2: 496, stroke: "#f8fafc", lineWidth: 7 },
+    { type: "path", fill: "#f8fafc", points: [{ x: 365, y: 476 }, { x: 352, y: 498 }, { x: 378, y: 498 }], close: true },
+    { type: "line", x1: 445, y1: 538, x2: 445, y2: 496, stroke: "#f8fafc", lineWidth: 7 },
+    { type: "path", fill: "#f8fafc", points: [{ x: 445, y: 476 }, { x: 432, y: 498 }, { x: 458, y: 498 }], close: true },
+
+    { type: "line", x1: 106, y1: 245, x2: 150, y2: 245, stroke: "#f8fafc", lineWidth: 6 },
+    { type: "line", x1: 150, y1: 245, x2: 150, y2: 234, stroke: "#f8fafc", lineWidth: 6 },
+    { type: "path", fill: "#f8fafc", points: [{ x: 150, y: 220 }, { x: 140, y: 236 }, { x: 160, y: 236 }], close: true },
+    { type: "line", x1: 106, y1: 295, x2: 150, y2: 295, stroke: "#f8fafc", lineWidth: 6 },
+    { type: "line", x1: 150, y1: 295, x2: 150, y2: 284, stroke: "#f8fafc", lineWidth: 6 },
+    { type: "path", fill: "#f8fafc", points: [{ x: 150, y: 270 }, { x: 140, y: 286 }, { x: 160, y: 286 }], close: true },
+    { type: "line", x1: 106, y1: 345, x2: 150, y2: 345, stroke: "#f8fafc", lineWidth: 6 },
+    { type: "line", x1: 150, y1: 345, x2: 150, y2: 356, stroke: "#f8fafc", lineWidth: 6 },
+    { type: "path", fill: "#f8fafc", points: [{ x: 150, y: 370 }, { x: 140, y: 354 }, { x: 160, y: 354 }], close: true },
+  ],
+} as const;
+
 const ROUNDABOUT_001 = {
   id: "ROUNDABOUT_001",
   width: 800,
@@ -540,6 +601,7 @@ export const STAGE_TEMPLATES = {
   T_INTERSECTION_001,
   CROSS_INTERSECTION_001,
   CROSS_INTERSECTION_RIGHT_TURN_SIGNAL_001,
+  SIGNALISED_OFFSET_LANES_001,
   ROUNDABOUT_001,
   MOTORWAY_MERGE_001,
   URBAN_BUS_LANE_SIGN_001,

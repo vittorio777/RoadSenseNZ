@@ -9,7 +9,7 @@ const mockScenarioMeta: ScenarioMeta = {
   scenarioId: "mwy_merge_0001",
   interactionType: "AUTOPLAY_PAUSE_REPLAY",
   stageGroup: "Motorway",
-  stage: "motorway_merge",
+  stage: "motorways",
   tags: ["merge", "lane-discipline"],
   articles: ["article-motorway-merge", "article-lane-discipline"],
   preview:

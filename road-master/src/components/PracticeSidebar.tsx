@@ -40,7 +40,7 @@ const disabledStageGroups = new Set<StageGroup>([
   "Hazards",
   "Emergency",
 ]);
-const disabledStages = new Set<Stage>(["urban_straight", "carpark"]);
+const disabledStages = new Set<Stage>(["urban_general", "car_parks"]);
 
 type SidebarNavProps = {
   mode: PracticeMode;

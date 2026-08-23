@@ -7,38 +7,31 @@ export const STAGE_TREE: {
   {
     group: "Intersections",
     stages: [
-      "cross_intersection",
-      "t_intersection",
-      "roundabout",
+      "signalised_intersections",
+      "unsignalised_intersections",
+      "roundabouts",
     ],
   },
   {
     group: "UrbanRoad",
     stages: [
-      "urban_straight",
-      "urban_multi_lane",
+      "urban_general",
+      "bus_lanes",
     ],
   },
   {
     group: "CountryRoad",
-    stages: [
-      "country_straight",
-      "country_uncontrolled_intersection",
-    ],
+    stages: ["country_roads"],
   },
   {
     group: "Motorway",
-    stages: [
-      "motorway_merge",
-      "motorway_exit",
-      "motorway_cruising",
-    ],
+    stages: ["motorways"],
   },
   {
     group: "Parking",
     stages: [
       "roadside_parking",
-      "carpark",
+      "car_parks",
     ],
   },
   {
@@ -61,33 +54,28 @@ export const STAGE_TREE: {
 
 export const STAGE_GROUP_LABELS: Record<StageGroup, string> = {
   Intersections: "Intersections",
-  UrbanRoad: "Urban Road",
-  CountryRoad: "Country Road",
-  Motorway: "Motorway",
+  UrbanRoad: "Urban Roads",
+  CountryRoad: "Country Roads",
+  Motorway: "Motorways",
   Parking: "Parking",
   Hazards: "Hazards",
-  Emergency: "Emergency",
+  Emergency: "Emergencies",
 };
 
 export const STAGE_LABELS: Record<Stage, string> = {
-  cross_intersection: "Crossroad",
-  t_intersection: "T junction",
-  roundabout: "Roundabout",
+  signalised_intersections: "Signalised",
+  unsignalised_intersections: "Unsignalised",
+  roundabouts: "Roundabouts",
 
-  urban_straight: "Straight road",
-  urban_multi_lane: "Bus lanes",
-  pedestrian_crossing_zone: "Pedestrian",
-  school_zone: "School zone",
+  urban_general: "General Driving",
+  bus_lanes: "Bus Lanes",
 
-  country_straight: "Open road",
-  country_uncontrolled_intersection: "Uncontrolled junction",
+  country_roads: "Country Roads",
 
-  motorway_merge: "Merging",
-  motorway_exit: "Exits",
-  motorway_cruising: "Cruising",
+  motorways: "Motorways",
 
   roadside_parking: "Roadside",
-  carpark: "Car park",
+  car_parks: "Car Parks",
 
   roadworks_zone: "Roadworks",
   emergency_vehicle_encounter: "Emergency vehicle",

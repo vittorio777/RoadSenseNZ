@@ -4,7 +4,7 @@ const mockScenarioMeta: ScenarioMeta = {
   scenarioId: "int_t_0001",
   interactionType: "AUTOPLAY_PAUSE_REPLAY",
   stageGroup: "Intersections",
-  stage: "t_intersection",
+  stage: "unsignalised_intersections",
   tags: ["give-way", "right-turn"],
   articles: ["article-001", "article-002"],
   preview: "A car approaches a T-intersection with a give-way sign. The driver intends to make a right turn.",

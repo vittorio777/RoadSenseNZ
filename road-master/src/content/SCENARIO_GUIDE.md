@@ -7,26 +7,52 @@ RoadSense uses scenario data as the source of truth. Each scenario should live i
 Keep these top-level `stageGroup` values stable unless the app is intentionally migrated:
 
 - `Intersections`: junctions, roundabouts, give-way or priority decisions at road crossings.
-- `UrbanRoad`: city street driving, bus lanes, multi-lane use, crossings, school zones, and common urban decisions.
+- `UrbanRoad`: city street driving, bus lanes, lane use, and common urban decisions.
 - `CountryRoad`: rural or open-road situations, including uncontrolled rural intersections.
 - `Motorway`: motorway merging, exits, cruising, lane discipline, and high-speed traffic flow.
 - `Parking`: roadside parking, paid parking, parking signs, parking machines, and car parks.
 - `Hazards`: temporary or unusual hazards such as roadworks, emergency vehicles, and school buses.
 - `Emergency`: vehicle control problems, crashes, breakdowns, and urgent response situations.
 
-Do not move or delete existing scenarios when adjusting labels. Existing scenario ids, stage ids, and folders are part of the content contract.
+Current chapter sections:
+
+- `Intersections`
+  - `signalised_intersections`: traffic-light junctions, including circular green and arrow-light decisions.
+  - `unsignalised_intersections`: give-way, stop, T-junction, and uncontrolled junction priority decisions.
+  - `roundabouts`: roundabout entry, lane choice, signalling, and gap timing.
+- `UrbanRoad`
+  - `urban_general`: ordinary city-road observation, lane discipline, and general urban driving.
+  - `bus_lanes`: bus lane signs, time restrictions, lane use, and related markings.
+- `CountryRoad`
+  - `country_roads`: rural and open-road situations. Keep disabled until demo content exists.
+- `Motorway`
+  - `motorways`: motorway merging, exits, cruising, and lane discipline. Keep disabled until demo content exists.
+- `Parking`
+  - `roadside_parking`: roadside signs, paid parking, parking machines, and kerbside rules.
+  - `car_parks`: off-street parking areas. Keep disabled until demo content exists.
+- `Hazards`
+  - `roadworks_zone`, `emergency_vehicle_encounter`, `school_bus_encounter`: keep disabled until demo content exists.
+- `Emergency`
+  - `breakdown`, `accident_scene`, `loss_of_control`: keep disabled until demo content exists.
+
+Do not delete existing scenarios when adjusting labels. Existing scenario ids are stable. Stage ids can be migrated only when `src/contracts/scenario.ts`, `src/config/stageConfig.ts`, and affected scenario metadata are updated together.
 
 ## Stage Labels
 
-The `Stage` ids in `src/contracts/scenario.ts` are stable ids. The short names shown in the sidebar are display labels in `src/config/stageConfig.ts`.
+The `Stage` ids in `src/contracts/scenario.ts` are content categories. The short names shown in the sidebar are display labels in `src/config/stageConfig.ts`.
 
 Use short, scannable labels in the UI. If a label changes, prefer updating `STAGE_LABELS` instead of changing the id.
 
 ## Choosing A Stage
 
 - If the main decision is at a junction, use `Intersections`.
-- If the road is a normal city street and the question is about lane use, bus lanes, crossings, or school zones, use `UrbanRoad`.
-- If the question is about parking permissions, fees, parking machines, or marked parking areas, use `Parking`.
+- If a junction has traffic lights, use `signalised_intersections`.
+- If a junction has no traffic lights, use `unsignalised_intersections`.
+- If the decision is at a roundabout, use `roundabouts`.
+- If the road is a normal city street and the question is about ordinary lane use or observation, use `urban_general`.
+- If the question is about bus lane signs, times, or markings, use `bus_lanes`.
+- If the question is about kerbside parking permissions, fees, parking machines, or roadside signs, use `roadside_parking`.
+- If the question is inside an off-street parking area, use `car_parks`.
 - If the setting is an open rural road, use `CountryRoad`.
 - If the setting is a motorway or ramp, use `Motorway`.
 - If the focus is an unusual external risk, use `Hazards`.

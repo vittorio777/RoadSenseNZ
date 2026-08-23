@@ -9,7 +9,7 @@ const mockScenarioMeta: ScenarioMeta = {
   scenarioId: "urb_bus_lane_time_0001",
   interactionType: "STATIC_ONLY",
   stageGroup: "UrbanRoad",
-  stage: "urban_multi_lane",
+  stage: "bus_lanes",
   tags: ["lane-discipline"],
   articles: ["article-bus-lane", "article-urban-lanes"],
   preview:

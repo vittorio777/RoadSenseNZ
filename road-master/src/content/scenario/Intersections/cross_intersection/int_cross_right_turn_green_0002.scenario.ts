@@ -122,7 +122,7 @@ const mockScenarioMeta: ScenarioMeta = {
   scenarioId: "int_cross_right_turn_green_0002",
   interactionType: "AUTOPLAY_PAUSE_REPLAY",
   stageGroup: "Intersections",
-  stage: "cross_intersection",
+  stage: "signalised_intersections",
   tags: ["traffic-light", "right-turn", "give-way", "straight-through"],
   articles: ["article-cross-intersection", "article-right-turn-give-way"],
   preview:
