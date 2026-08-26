@@ -1,94 +1,274 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-ECXY82NYDH"
+    ></script>
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag("js", new Date());
+      gtag("config", "G-ECXY82NYDH");
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NZ Road Code | Interactive Learning Platform</title>
-    <link rel="stylesheet" href="style.css" />
+
+    <title>RoadSense | Learn the road before it tests you</title>
+
+    <meta
+      name="description"
+      content="RoadSense helps learners practise real New Zealand driving situations through interactive road scenarios."
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
       rel="stylesheet"
     />
+
+    <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
+    <!-- Navigation -->
     <header class="nav">
-      <div class="logo">🚗 <span>NZ Road Code</span></div>
+      <a class="brand" href="#">
+        <img
+          src="./assets/roadsense-logo.png"
+          alt="RoadSense logo"
+          class="brand-logo"
+        />
 
-      <a
-        class="demo-button"
-        href="https://roadsense-nz.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Try Live Demo
+        <span class="brand-name"> Road<span>Sense</span> </span>
       </a>
-    </header>
 
-    <section class="hero">
-      <div class="left">
-        <div class="badge">Interactive · Visual · Practical</div>
-        <h1>
-          Learn New Zealand<br />Road Rules by<br /><span
-            >Driving Through Them.</span
-          >
-        </h1>
-        <p>
-          An interactive learning platform that transforms traditional Road Code
-          questions into animated real-world driving scenarios.
-        </p>
-      </div>
+      <nav class="nav-links">
+        <a href="#how-it-works">How it works</a>
 
-      <div class="preview">
         <a
+          class="nav-cta"
           href="https://roadsense-nz.vercel.app/"
           target="_blank"
           rel="noopener noreferrer"
+          onclick="
+            gtag('event', 'click_live_demo', {
+              location: 'navbar',
+            })
+          "
         >
-          <img src="./assets/preview.gif" alt="RoadSense Project Preview" />
+          Try RoadSense
+          <span>↗</span>
         </a>
-      </div>
-    </section>
+      </nav>
+    </header>
 
-    <section class="features">
-      <div class="card">
-        <h3>Scenario-Based Learning</h3>
-        <p>
-          Practice with realistic traffic situations instead of static
-          multiple-choice questions.
-        </p>
-      </div>
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-copy">
+            <h1>
+              Learn the road
+              <span>before it tests you.</span>
+            </h1>
 
-      <div class="card">
-        <h3>Interactive Timeline</h3>
-        <p>
-          Replay every event step by step and understand why each driving
-          decision matters.
-        </p>
-      </div>
+            <p class="hero-description">
+              Interactive practice for real New Zealand roads.
+            </p>
 
-      <div class="card">
-        <h3>Progress Tracking</h3>
-        <p>Save completed scenarios and continue learning at your own pace.</p>
-      </div>
-    </section>
+            <a
+              class="primary-button"
+              href="https://roadsense-nz.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="
+                gtag('event', 'click_live_demo', {
+                  location: 'hero',
+                })
+              "
+            >
+              Start practising
+              <span class="button-arrow">→</span>
+            </a>
+          </div>
 
-    <section class="tech">
-      <h2>Built with</h2>
-      <div class="stack">
-        <span>Next.js</span>
-        <span>TypeScript</span>
-        <span>React</span>
-        <span>React Konva</span>
-        <span>Zustand</span>
-        <span>Prisma</span>
-        <span>PostgreSQL</span>
-      </div>
-    </section>
+          <div class="hero-product">
+            <a
+              href="https://roadsense-nz.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="product-window"
+              onclick="
+                gtag('event', 'click_live_demo', {
+                  location: 'hero_preview',
+                })
+              "
+            >
+              <video
+                class="preview-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="metadata"
+              >
+                <source src="./assets/preview.mp4" type="video/mp4" />
+              </video>
+            </a>
+          </div>
+        </div>
 
-    <footer>
-      <p>© Wayne Zhao</p>
+        <div class="road-line" aria-hidden="true"></div>
+      </section>
+
+      <!-- Step 01 -->
+      <section class="journey-section dark-section" id="how-it-works">
+        <div class="journey-grid">
+          <div class="journey-copy">
+            <span class="step-number">01</span>
+
+            <h2>
+              Pick a place
+              <br />
+              you want to practise.
+            </h2>
+
+            <div class="section-rule"></div>
+          </div>
+
+          <div class="journey-media">
+            <img src="./assets/map-preview.png" alt="RoadSense map mode" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 02 -->
+      <section class="journey-section light-section reverse">
+        <div class="journey-grid">
+          <div class="journey-copy">
+            <span class="step-number">02</span>
+
+            <h2>
+              See the situation
+              <br />
+              before making the call.
+            </h2>
+
+            <div class="section-rule"></div>
+          </div>
+
+          <div class="journey-media">
+            <img
+              src="./assets/scenario-preview.png"
+              alt="RoadSense road scenario"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 03 -->
+      <section class="journey-section light-section">
+        <div class="journey-grid">
+          <div class="journey-copy">
+            <span class="step-number">03</span>
+
+            <h2>Make your call.</h2>
+
+            <div class="section-rule"></div>
+          </div>
+
+          <div class="journey-media journey-video">
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="./assets/answer-preview.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <!-- Step 04 -->
+      <section class="journey-section dark-section replay-section reverse">
+        <div class="journey-grid">
+          <div class="journey-copy">
+            <span class="step-number">04</span>
+
+            <h2>
+              Don’t just get
+              <br />
+              the answer.
+              <br />
+              See why.
+            </h2>
+
+            <div class="section-rule"></div>
+
+            <p class="replay-description">Replay the situation step by step.</p>
+
+            <div class="replay-features">
+              <span>↻ Replay</span>
+              <span>⌘ Follow paths</span>
+              <span>◎ Understand</span>
+            </div>
+          </div>
+
+          <div class="journey-media journey-video">
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="./assets/replay-preview.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA -->
+      <section class="final-cta">
+        <div class="final-inner">
+          <div class="final-mascot">
+            <img
+              src="./assets/roadsense-logo.png"
+              alt="RoadSense Kiwi mascot"
+            />
+          </div>
+
+          <div class="final-copy">
+            <h2>Ready for the road?</h2>
+
+            <a
+              class="primary-button"
+              href="https://roadsense-nz.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onclick="
+                gtag('event', 'click_live_demo', {
+                  location: 'final_cta',
+                })
+              "
+            >
+              Start practising
+              <span class="button-arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="brand-name"> Road<span>Sense</span> </span>
+
+          <span>© 2026 Wayne Zhao</span>
+        </div>
+      </div>
     </footer>
   </body>
 </html>
