@@ -18,7 +18,7 @@ import { ArrowLeft, MapPinned } from "lucide-react";
 
 export type PracticeMode = "home" | "chapter" | "map";
 type ScenarioEntrySource = "chapter" | "map" | null;
-const DEFAULT_MAP_REGION_ID: MapRegionId = "new_zealand";
+const DEFAULT_MAP_REGION_ID: MapRegionId = "auckland";
 const PROGRESS_STORAGE_KEY = "roadsense.progress.v1";
 const PROGRESS_ENABLED_STORAGE_KEY = "roadsense.progress.enabled.v1";
 const EMPTY_LOCATION: Location = {
@@ -47,7 +47,7 @@ function readProgressEnabled() {
 }
 
 const PracticePage = () => {
-  const [mode, setMode] = useState<PracticeMode>("home");
+  const [mode, setMode] = useState<PracticeMode>("map");
   const [mapRegionId, setMapRegionId] = useState<MapRegionId>(
     DEFAULT_MAP_REGION_ID,
   );

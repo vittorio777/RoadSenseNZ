@@ -73,7 +73,7 @@ const PracticeSidebar = ({
 }: SidebarNavProps) => {
   const [expandedGroups, setExpandedGroups] = useState<StageGroup[]>([]);
   const [expandedMapRegions, setExpandedMapRegions] = useState<MapRegionId[]>(
-    [],
+    ["auckland"],
   );
   const [selectedStage, setSelectedStage] = useState<Stage>();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
