@@ -8,8 +8,6 @@ RoadSenseNZ is an interactive web prototype for practising driving decisions on 
 
 ![Driving decisions, answer feedback, and animated outcomes](docs/assets/roadsense-demo.gif)
 
-An 18-second excerpt from the existing demo recording. [Full recording](docs/assets/preview.mp4).
-
 ## Why I Built It
 
 I started RoadSenseNZ from my own experience as a learner driver in New Zealand. Learning the rules helped, but applying them to tricky road situations was a separate challenge. I wanted a way to explore those situations before encountering them on the road: observe other road users, make a choice, and understand its consequences.
@@ -20,8 +18,7 @@ I started RoadSenseNZ from my own experience as a learner driver in New Zealand.
 2. Watch an animated scene or inspect a static sign or parking visual.
 3. Answer a driving-decision question and read the feedback and explanation.
 4. Replay the setup or watch the selected answer's outcome where an animation is supplied.
-
-Answers can be remembered in the current browser.
+5. Use the memory option to save your answers and progress locally in the browser's local storage and return to them later.
 
 ## Engineering Highlights
 
@@ -41,7 +38,7 @@ Vitest · React Testing Library · GitHub Actions · Vercel
 
 I built the early core design and initial implementation mainly by hand, including the scenario/data structure, animation engine, player flow, and initial React components. In later iterations, I used AI coding tools to help with UI and styling, feature implementation, refactoring, and debugging.
 
-AI helped accelerate implementation and iteration. Changes were validated through human review, automated tests, lint, production builds, and manual browser checks.
+I used these tools to iterate faster while reviewing their suggested changes myself. I checked the resulting implementation with automated tests, lint, production builds, and manual browser checks.
 
 ## Testing and Quality
 
@@ -76,7 +73,7 @@ npm ci
 npm run dev
 ```
 
-Open the URL printed by Vite. Chapters work without a map key. To enable the map, copy `app/.env.example` to `app/.env.local` and set `VITE_MAPTILER_KEY` to a MapTiler browser key. Restart the development server after changing it. The key is included in the frontend bundle, so restrict its allowed origins.
+Open the URL printed by Vite. Chapters work without a map key. To enable the map locally, copy `app/.env.example` to `app/.env.local` and set `VITE_MAPTILER_KEY` to your MapTiler browser key. Vite reads this value when the development server starts; restart it after changes. For Vercel, set the same variable in the project's environment settings before building and deploying. See the [map configuration details](app/README.md#environment-variables) for how the key reaches the browser.
 
 See [developer setup and deployment](app/README.md) for configuration, scripts, and Vercel settings.
 

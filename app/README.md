@@ -25,7 +25,11 @@ Copy `.env.example` to `.env.local` next to `package.json`, then set:
 VITE_MAPTILER_KEY=your_maptiler_api_key
 ```
 
-The fallback name `VITE_MAPTILER_API_KEY` is also accepted. Use a MapTiler browser-access key and allow your local and deployed origins. Vite includes the key in the frontend bundle; `.env.local` is ignored by Git. Restart Vite after changes, and rebuild when changing deployment variables.
+Vite reads the value from `.env.local` or the environment of the process running it. The map component accesses it through `import.meta.env.VITE_MAPTILER_KEY` and adds it to the MapTiler style request. The fallback name `VITE_MAPTILER_API_KEY` is used when the primary variable is not defined.
+
+During a production build, Vite writes the value into the generated JavaScript. The browser then uses it to request map styles and tiles. On Vercel, configure the variable in the project's environment settings before building; a local `.env.local` file is not uploaded by Git. Restart the development server after local changes, or rebuild and deploy after changes to deployment variables.
+
+Use a MapTiler browser-access key and allow your local and deployed origins. The key is visible to the browser; keeping `.env.local` out of Git protects the repository copy, but does not hide the key used by the website. See [Vite's environment variable documentation](https://vite.dev/guide/env-and-mode).
 
 MapLibre and its worker are bundled locally. Map styles and tiles require internet access to MapTiler. Automated tests do not require a key.
 
