@@ -3,11 +3,11 @@ name: Project checks
 on:
   push:
     paths:
-      - 'road-master/**'
+      - 'app/**'
       - '.github/workflows/checks.yml'
   pull_request:
     paths:
-      - 'road-master/**'
+      - 'app/**'
       - '.github/workflows/checks.yml'
   workflow_dispatch:
 
@@ -21,13 +21,13 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: road-master
+        working-directory: app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: road-master/package-lock.json
+          cache-dependency-path: app/package-lock.json
       - run: npm ci
       - run: npm run check

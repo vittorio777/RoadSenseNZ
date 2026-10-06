@@ -1,6 +1,6 @@
 # Testing
 
-Install dependencies with `npm ci`, then run:
+From the repository's `app/` directory, install dependencies with `npm ci`, then run:
 
 ```sh
 npm test

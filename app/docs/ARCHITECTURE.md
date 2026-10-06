@@ -1,6 +1,6 @@
 # Architecture
 
-RoadSense NZ is a client-side practice app. The repository's top-level `docs/` folder holds the promotional site; `road-master/` holds the React application. These notes describe the application.
+RoadSense NZ is a client-side practice app. The repository's top-level `docs/` folder holds the promotional site; `app/` holds the React application. These notes describe the application.
 
 ## From content to a practice session
 
