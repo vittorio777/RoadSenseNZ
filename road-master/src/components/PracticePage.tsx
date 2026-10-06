@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import PracticeSidebar from "./PracticeSidebar";
 import PracticeSidePanel, { MapPreviewDialog } from "./PracticeSidePanel";
-import ScenarioMap, {
+import ScenarioMap from "./ScenarioMap";
+import {
   getRegionById,
   type MapViewport,
   type MapRegionId,
-} from "./ScenarioMap";
+} from "../config/mapConfig";
 import ScenarioPlayer from "./ScenarioPlayer";
 import type {
   Location,
@@ -315,6 +316,7 @@ const PracticePage = () => {
           <div className="min-h-0">
             <aside className="h-full min-h-0 border-l border-zinc-200 bg-zinc-50">
               <PracticeSidePanel
+                key={currentMockScenario?.meta.scenarioId ?? "empty"}
                 mode={mode}
                 isCollapsed={isRightCollapsed}
                 showMapDetails={showMapCanvas}

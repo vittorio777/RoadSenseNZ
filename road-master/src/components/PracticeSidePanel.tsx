@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { PracticeMode } from "./PracticePage";
-import type { MapRegion } from "./ScenarioMap";
-import { getVisibleScenarios } from "./ScenarioMap";
+import type { MapRegion } from "../config/mapConfig";
+import { getVisibleScenarios } from "../config/mapConfig";
 import ScenarioMap from "./ScenarioMap";
 import type { Location, Scenario } from "../contracts/scenario";
 import {
@@ -44,11 +44,6 @@ const PracticeSidePanel = ({
 }) => {
   const shouldShowMapDetails = mode === "map" && showMapDetails;
   const [isMapPreviewOpen, setIsMapPreviewOpen] = useState(false);
-  const currentScenarioId = currentScenario?.meta.scenarioId;
-
-  useEffect(() => {
-    setIsMapPreviewOpen(false);
-  }, [currentScenarioId]);
 
   if (isCollapsed) {
     return (

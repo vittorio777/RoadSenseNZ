@@ -1,0 +1,33 @@
+name: Project checks
+
+on:
+  push:
+    paths:
+      - 'road-master/**'
+      - '.github/workflows/checks.yml'
+  pull_request:
+    paths:
+      - 'road-master/**'
+      - '.github/workflows/checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, test, and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: road-master
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: road-master/package-lock.json
+      - run: npm ci
+      - run: npm run check

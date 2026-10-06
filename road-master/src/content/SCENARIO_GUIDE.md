@@ -14,7 +14,7 @@ Keep these top-level `stageGroup` values stable unless the app is intentionally 
 - `Hazards`: temporary or unusual hazards such as roadworks, emergency vehicles, and school buses.
 - `Emergency`: vehicle control problems, crashes, breakdowns, and urgent response situations.
 
-Current chapter sections:
+Defined chapter sections (not all are enabled in the prototype):
 
 - `Intersections`
   - `signalised_intersections`: traffic-light junctions, including circular green and arrow-light decisions.
@@ -26,7 +26,7 @@ Current chapter sections:
 - `CountryRoad`
   - `country_roads`: rural and open-road situations. Keep disabled until demo content exists.
 - `Motorway`
-  - `motorways`: motorway merging, exits, cruising, and lane discipline. Keep disabled until demo content exists.
+  - `motorways`: motorway merging, exits, cruising, and lane discipline. The sidebar currently disables this chapter even though a demo scenario is bundled.
 - `Parking`
   - `roadside_parking`: roadside signs, paid parking, parking machines, and kerbside rules.
   - `car_parks`: off-street parking areas. Keep disabled until demo content exists.
@@ -62,7 +62,7 @@ Use short, scannable labels in the UI. If a label changes, prefer updating `STAG
 
 - `AUTOPLAY_PAUSE_REPLAY`: use for animated decision points. The animation plays, pauses at the key moment, then the user chooses.
 - `LOOP_WITH_CHOICES`: use for observation tasks where the scene loops and the user can answer at any time.
-- `LOOP_GATED_CHOICES`: reserve for timing-window interactions where the same choice may succeed or fail depending on when it is made.
+- `LOOP_GATED_CHOICES`: defined in the contract, but currently rendered like `LOOP_WITH_CHOICES`. Timing-based answer gating is not implemented.
 - `STATIC_ONLY`: use for signs, parking machines, road layouts, or still images where no motion is needed.
 
 ## Static Visual Rules
@@ -86,7 +86,7 @@ Use `staticVisual` overlays for:
 Every demo scenario should include:
 
 - A stable `scenarioId`.
-- A clear `title`.
+- A clear question `prompt` in `questions` (the current metadata type has no `title` field).
 - A concise `preview`.
 - Real location metadata when available: `name`, `address`, `lat`, and `lng`.
 - Options with varied correct-answer positions across the demo set.
@@ -96,7 +96,9 @@ Every demo scenario should include:
 
 Place scenario files under:
 
-`src/content/scenario/<StageGroup>/<stage>/<scenario_id>.scenario.ts`
+`src/content/scenario/<StageGroup>/<scene_folder>/<scenario_id>.scenario.ts`
+
+Folder names describe existing scene families and may differ from stable stage IDs in metadata. Follow a nearby scenario as an example.
 
 Use snake_case ids with a numeric suffix, for example:
 

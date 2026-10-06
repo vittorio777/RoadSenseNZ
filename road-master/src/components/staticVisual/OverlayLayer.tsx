@@ -113,19 +113,16 @@ function HighlightArea({ overlay }: { overlay: HighlightAreaOverlay }) {
 
 function InfoPanel({ overlay }: { overlay: InfoPanelOverlay }) {
   if (overlay.variant === "machineScreen") {
-    let currentY = overlay.panel.y;
-
+    const rows = overlay.lines.map((line) => ({ line, style: getMachineScreenLineStyle(line) }));
+    const nodes = rows.map(({ line, style }, index) => {
+      const precedingHeight = rows.slice(0, index).reduce((height, row, rowIndex) =>
+        height + row.style.lineHeight + (rowIndex === 0 ? 0 : row.style.gapBefore), 0);
+      const y = overlay.panel.y + precedingHeight + (index === 0 ? 0 : style.gapBefore);
+      return renderMachineScreenLine(line, index, y, overlay, style);
+    });
     return (
       <g fill="#1f1f1b" fontFamily='Consolas, "Courier New", monospace'>
-        {overlay.lines.map((line, index) => {
-          const style = getMachineScreenLineStyle(line);
-          currentY += index === 0 ? 0 : style.gapBefore;
-
-          const node = renderMachineScreenLine(line, index, currentY, overlay, style);
-
-          currentY += style.lineHeight;
-          return node;
-        })}
+        {nodes}
       </g>
     );
   }

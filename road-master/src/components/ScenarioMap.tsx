@@ -1,3 +1,6 @@
+import { loadMapLibreRuntime, type MapLibreRuntime } from "../engine/mapRuntime";
+import { getVisibleScenarios } from "../config/mapConfig";
+import type { MapRegion, MapViewport } from "../config/mapConfig";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {
   Map as MapLibreMap,
@@ -8,207 +11,18 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { Scenario } from "../contracts/scenario";
 import { STAGE_LABELS } from "../config/stageConfig";
 
-type MapLibreRuntime = {
-  Map: typeof import("maplibre-gl").Map;
-  Marker: typeof import("maplibre-gl").Marker;
-  Popup: typeof import("maplibre-gl").Popup;
-  NavigationControl: typeof import("maplibre-gl").NavigationControl;
-  AttributionControl: typeof import("maplibre-gl").AttributionControl;
-};
-
 declare global {
   interface Window {
     maplibregl?: MapLibreRuntime;
   }
 }
 
-const MAPLIBRE_CDN =
-  "https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js";
-
-let mapLibrePromise: Promise<MapLibreRuntime> | null = null;
-
 function loadMapLibre() {
-  if (window.maplibregl) {
-    return Promise.resolve(window.maplibregl);
-  }
-
-  if (mapLibrePromise) {
-    return mapLibrePromise;
-  }
-
-  mapLibrePromise = new Promise((resolve, reject) => {
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      `script[src="${MAPLIBRE_CDN}"]`,
-    );
-
-    if (existingScript) {
-      existingScript.addEventListener("load", () => {
-        if (window.maplibregl) {
-          resolve(window.maplibregl);
-        } else {
-          reject(new Error("MapLibre loaded but window.maplibregl is missing."));
-        }
-      });
-      existingScript.addEventListener("error", () => {
-        reject(new Error("Failed to load MapLibre script."));
-      });
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = MAPLIBRE_CDN;
-    script.async = true;
-    script.onload = () => {
-      if (window.maplibregl) {
-        resolve(window.maplibregl);
-      } else {
-        reject(new Error("MapLibre loaded but window.maplibregl is missing."));
-      }
-    };
-    script.onerror = () => reject(new Error("Failed to load MapLibre script."));
-    document.head.appendChild(script);
+  return loadMapLibreRuntime().then((runtime) => {
+    window.maplibregl = runtime;
+    return runtime;
   });
-
-  return mapLibrePromise;
 }
-
-export type MapRegionId =
-  | "new_zealand"
-  | "auckland"
-  | "auckland_greenlane"
-  | "auckland_cbd"
-  | "auckland_newmarket"
-  | "auckland_mount_eden"
-  | "auckland_manukau"
-  | "wellington"
-  | "wellington_cbd"
-  | "wellington_lower_hutt"
-  | "wellington_porirua";
-
-export type MapViewport = {
-  center: {
-    lat: number;
-    lng: number;
-  };
-  zoom: number;
-};
-
-export type MapRegion = {
-  id: MapRegionId;
-  label: string;
-  subtitle: string;
-  center: {
-    lat: number;
-    lng: number;
-  };
-  zoom: number;
-};
-
-export const MAP_REGIONS: MapRegion[] = [
-  {
-    id: "new_zealand",
-    label: "New Zealand",
-    subtitle: "Choose a city or area from the left sidebar",
-    center: { lat: -41.2865, lng: 174.7762 },
-    zoom: 5,
-  },
-  {
-    id: "auckland",
-    label: "Auckland",
-    subtitle: "Central Auckland scenarios",
-    center: { lat: -36.8485, lng: 174.7633 },
-    zoom: 11,
-  },
-  {
-    id: "auckland_greenlane",
-    label: "Greenlane",
-    subtitle: "Suburban intersections and arterial roads",
-    center: { lat: -36.8926, lng: 174.7932 },
-    zoom: 14,
-  },
-  {
-    id: "auckland_cbd",
-    label: "CBD",
-    subtitle: "Dense central city streets",
-    center: { lat: -36.8485, lng: 174.7633 },
-    zoom: 14,
-  },
-  {
-    id: "auckland_newmarket",
-    label: "Newmarket",
-    subtitle: "Busy shopping and arterial roads",
-    center: { lat: -36.8692, lng: 174.7778 },
-    zoom: 14,
-  },
-  {
-    id: "auckland_mount_eden",
-    label: "Mount Eden",
-    subtitle: "Residential streets and urban intersections",
-    center: { lat: -36.8783, lng: 174.7645 },
-    zoom: 14,
-  },
-  {
-    id: "auckland_manukau",
-    label: "Manukau",
-    subtitle: "Suburban arterials and motorway access",
-    center: { lat: -36.9928, lng: 174.8797 },
-    zoom: 13,
-  },
-  {
-    id: "wellington",
-    label: "Wellington",
-    subtitle: "Reserved for future Wellington scenarios",
-    center: { lat: -41.2865, lng: 174.7762 },
-    zoom: 12,
-  },
-  {
-    id: "wellington_cbd",
-    label: "CBD",
-    subtitle: "Central Wellington streets",
-    center: { lat: -41.2865, lng: 174.7762 },
-    zoom: 14,
-  },
-  {
-    id: "wellington_lower_hutt",
-    label: "Lower Hutt",
-    subtitle: "Suburban routes north-east of Wellington",
-    center: { lat: -41.2124, lng: 174.9082 },
-    zoom: 13,
-  },
-  {
-    id: "wellington_porirua",
-    label: "Porirua",
-    subtitle: "Northern urban and motorway approaches",
-    center: { lat: -41.1332, lng: 174.8403 },
-    zoom: 13,
-  },
-];
-
-export type MapAreaNode = {
-  regionId: MapRegionId;
-  children?: MapAreaNode[];
-};
-
-export const MAP_AREA_TREE: MapAreaNode[] = [
-  {
-    regionId: "auckland",
-    children: [
-      { regionId: "auckland_cbd" },
-      { regionId: "auckland_greenlane" },
-      { regionId: "auckland_newmarket" },
-      { regionId: "auckland_mount_eden" },
-      { regionId: "auckland_manukau" },
-    ],
-  },
-  {
-    regionId: "wellington",
-    children: [
-      { regionId: "wellington_cbd" },
-      { regionId: "wellington_lower_hutt" },
-      { regionId: "wellington_porirua" },
-    ],
-  },
-];
 
 type InteractiveMapProps = {
   mode: "interactive";
@@ -283,6 +97,7 @@ function InteractiveScenarioMap({
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<MapLibreMarker[]>([]);
   const popupRef = useRef<MapLibrePopup | null>(null);
+  const [initialViewport] = useState(viewport);
   const [mapStatus, setMapStatus] = useState<MapStatus>("script-loading");
   const visibleScenarios = useMemo(
     () => getVisibleScenarios(scenarios, region),
@@ -299,22 +114,16 @@ function InteractiveScenarioMap({
     loadMapLibre()
       .then((maplibregl) => {
         if (!isMounted || !containerRef.current || mapRef.current) return;
-        console.log("MapLibre runtime loaded", {
-          hasMap: Boolean(maplibregl.Map),
-          hasMarker: Boolean(maplibregl.Marker),
-          hasMapTilerKey: Boolean(mapTilerKey),
-        });
         setMapStatus("script-loaded");
         setMapStatus("map-initializing");
 
         const map = new maplibregl.Map({
           container: containerRef.current,
           style: mapStyleUrl,
-          center: [viewport.center.lng, viewport.center.lat],
-          zoom: viewport.zoom,
+          center: [initialViewport.center.lng, initialViewport.center.lat],
+          zoom: initialViewport.zoom,
           attributionControl: false,
         });
-        console.log("MapLibre map created", map);
         setMapStatus("map-created");
 
         map.addControl(
@@ -354,7 +163,7 @@ function InteractiveScenarioMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [onViewportChange]);
+  }, [initialViewport, onViewportChange]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -676,26 +485,6 @@ function createMarkerElement(
   ].join(" ");
   markerEl.setAttribute("aria-label", "Scenario marker");
   return markerEl;
-}
-
-export function getRegionById(regionId: MapRegionId) {
-  return MAP_REGIONS.find((region) => region.id === regionId) ?? MAP_REGIONS[0];
-}
-
-export function getVisibleScenarios(scenarios: Scenario[], region: MapRegion) {
-  if (region.id === "new_zealand") {
-    return scenarios.filter((scenario) => scenario.meta.location);
-  }
-
-  if (region.id.startsWith("wellington")) {
-    return scenarios.filter((scenario) =>
-      scenario.meta.location.address?.includes("Wellington"),
-    );
-  }
-
-  return scenarios.filter((scenario) =>
-    scenario.meta.location.address?.includes("Auckland"),
-  );
 }
 
 export default ScenarioMap;

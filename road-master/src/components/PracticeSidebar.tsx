@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { PracticeMode } from "./PracticePage";
-import type { MapRegionId } from "./ScenarioMap";
-import { getRegionById, MAP_AREA_TREE } from "./ScenarioMap";
+import type { MapRegionId } from "../config/mapConfig";
+import { getRegionById, MAP_AREA_TREE } from "../config/mapConfig";
 import type { Stage, StageGroup } from "../contracts/scenario";
 import {
   STAGE_GROUP_LABELS,
