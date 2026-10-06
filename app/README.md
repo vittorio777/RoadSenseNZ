@@ -15,7 +15,7 @@ npm run dev
 
 Open the URL printed by Vite, usually `http://localhost:5173`. Without a map key, the map shows a configuration message; use **Chapters** to practise.
 
-These instructions and CI use npm. A pnpm lockfile is retained; avoid mixing package managers when updating dependencies.
+This project uses npm for local development, CI, and deployment. Keep `package-lock.json` as the only dependency lockfile. Use `npm ci` for reproducible installs and `npm install` when adding or updating dependencies.
 
 ## Environment Variables
 
@@ -79,6 +79,7 @@ The [live app](https://roadsense-nz.vercel.app/) is hosted on Vercel.
 | --- | --- |
 | Root Directory | `app` |
 | Framework | Vite |
+| Install command | `npm ci` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
 | Environment variable | `VITE_MAPTILER_KEY` |
